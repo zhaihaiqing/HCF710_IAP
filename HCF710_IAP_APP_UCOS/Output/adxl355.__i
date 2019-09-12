@@ -1,0 +1,7 @@
+-c --cpu Cortex-M3 -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I.\User -I.\FWlib\src -I.\FWlib\inc -I.\CMSIS
+-I E:\HD\HCF710\HCF710_Software\STM32L1xx_HCF1100\RTE
+-I C:\keil_mdk\ARM\PACK\Keil\STM32L1xx_DFP\1.2.0
+-I C:\keil_mdk\ARM\CMSIS\Include
+-I C:\keil_mdk\ARM\PACK\Keil\STM32L1xx_DFP\1.2.0\Device\Include
+-DSTM32L151xB -DUSE_STDPERIPH_DRIVER -DSTM32L1XX
+-o .\output\adxl355.o --omf_browse .\output\adxl355.crf --depend .\output\adxl355.d "User\ADXL355.c"

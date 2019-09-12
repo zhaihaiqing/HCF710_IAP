@@ -1,0 +1,7 @@
+-c --cpu Cortex-M3 -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I.\User -I.\FWlib\src -I.\FWlib\inc -I.\CMSIS -I.\HW_driver
+-I E:\HD\HCF710\HCF710_Software\STM32L1xx_HCF710\RTE
+-I C:\keil_mdk\ARM\PACK\Keil\STM32L1xx_DFP\1.2.0
+-I C:\keil_mdk\ARM\CMSIS\Include
+-I C:\keil_mdk\ARM\PACK\Keil\STM32L1xx_DFP\1.2.0\Device\Include
+-DSTM32L151xB -DUSE_STDPERIPH_DRIVER -DSTM32L1XX
+-o .\output\iflash.o --omf_browse .\output\iflash.crf --depend .\output\iflash.d "HW_driver\IFlash.c"
