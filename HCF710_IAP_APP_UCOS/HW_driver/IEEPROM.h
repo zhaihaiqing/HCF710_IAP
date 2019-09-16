@@ -21,6 +21,7 @@ unsigned char Read_EEPROM(unsigned int addr);
 void EERead(unsigned short addr, unsigned char *pbuff,unsigned short length);
 void EEWrite(unsigned short addr, unsigned char *pbuff,unsigned short length);
 void EEErase(unsigned short addr, unsigned short length);
+void EERead_Z(unsigned short addr, unsigned char *pbuff,unsigned short length);
 
 #endif
 

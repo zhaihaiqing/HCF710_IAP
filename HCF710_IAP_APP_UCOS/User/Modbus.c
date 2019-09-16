@@ -587,31 +587,77 @@ char FactoryCalibration(unsigned char RX_Len)
 返回格式:器件地址(1字节)+功能码(0x40)+数据数量(1字节)+SN信息(15字节)+校验(2字节)
 操作码:0x33,0x55,0x77,0x99
 ************************************************************************/
-uint16_t TOS_NODE_ID=111;
-const uint8_t __progmem_smartbow_start[64] = {"&&SUPERHHH111401&&2"};
+//uint16_t TOS_NODE_ID=111;
+//const uint8_t __progmem_smartbow_start[64] = {"&&SUPERHHH111401&&2"};
 char Get_SNInfo_Fun(void)
 {
 	unsigned char i;
+	//unsigned char err=0;
+	//uint16_t crc;
 	unsigned char SN_Info[16]={0};
-	unsigned char temp[19]={0};
-	volatile unsigned char reservalData = TOS_NODE_ID;
+	//unsigned char temp[19]={0};
+	//volatile unsigned char reservalData = TOS_NODE_ID;
 	
-	for(i=0; i<19; i++)
-	{
-		temp[i] = __progmem_smartbow_start[i];
-	}
+//	if(ModbusDataPackage.DataLen !=8 )err = err_OE;
+//	if( strncmp(FactorySetValueWord,(unsigned char *)&ModbusDataPackage.dat[2],4) !=0 )err=err_OE;
+//	
+//	if(  (err != 0)  && (ModbusDataPackage.dat[0] != 0) )//加判断
+//	{
+//		ModbusReturnAckInfo(err);
+//		return ERROR;
+//	}
 	
-	for(i=0; i<14; i++)
-	{
-		SN_Info[i] = temp[i+2];
-	}
-	SN_Info[14]=temp[18];
-	SN_Info[15]=0;
+	
+	
+//	
+//	for(i=0; i<19; i++)
+//	{
+//		temp[i] = __progmem_smartbow_start[i];
+//	}
+//	
+//	for(i=0; i<14; i++)
+//	{
+//		SN_Info[i] = temp[i+2];
+//	}
+//	SN_Info[14]=temp[18];
+//	SN_Info[15]=0;
+	
+	EERead_Z(EEPROM_SHARE_DATA_ADDR,SN_Info,16);//读取EEPROM中共享字段中的SN信息
+	
 	for(i=0;i<8;i++)
 	{
 		InputRegister.SN[i]=SN_Info[i*2]<<8 | SN_Info[i*2+1];
 		//InputRegisterTemp.SN[i]=htons(InputRegisterTemp.SN[i]);
 	}
+	
+	//memcpy((uint8_t *)&InputRegister,(uint8_t *)&InputRegisterTemp,sizeof(InputRegister));
+	
+
+	
+//	RS485_TX();
+//	for(i=0;i<8;i++)
+//	{
+//		InputRegisterTemp.SN[i]=SN_Info[i*2]<<8 | SN_Info[i*2+1];
+//		InputRegisterTemp.SN[i]=htons(InputRegisterTemp.SN[i]);
+//	}
+//	log_info("SN_Info:%s\r\n",&SN_Info);
+//	log_info("SN_Infi:%s\r\n",&InputRegisterTemp.SN[0]);
+//	RS485_RX();
+	
+//	temp[0] = KeepRegister.DeviceAddress;
+//	temp[1] = ModbusDataPackage.dat[1];
+//	temp[2] = 0x0F;
+//	
+//	for(i=0;i<15;i++)
+//	{
+//		temp[i+3]=SN_Info[i];
+//	}
+//	
+//	crc = CRC16_Check(temp,18);
+//	
+//	temp[18] = crc &0xff;
+//	temp[19] = crc >> 8;
+//	if(ModbusDataPackage.dat[0]) U485SendData(temp,20);
 	
 	return SUCCESS;
 }
