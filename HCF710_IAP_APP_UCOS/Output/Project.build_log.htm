@@ -27,7 +27,6 @@ Project File Date:  09/12/2019
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'D:\Program Files\Keil_v5\ARM\ARMCC\Bin'
 Build target 'STM32L1xx'
-compiling Temp.c...
 compiling gpio.c...
 compiling SPI.c...
 HW_driver\SPI.c(288): warning:  #550-D: variable "ID"  was set but never used
@@ -43,7 +42,26 @@ compiling stm32l1xx_it.c...
 User\stm32l1xx_it.c(185): warning:  #550-D: variable "tmp"  was set but never used
   	unsigned char 	Uart_Get_Data,tmp;	//串口1接收的数据
 User\stm32l1xx_it.c: 1 warning, 0 errors
+compiling main.c...
+User\main.c(184): warning:  #186-D: pointless comparison of unsigned integer with zero
+  	if((KeepRegister.Average_num<0)||(KeepRegister.Average_num>256))KeepRegister.Average_num=3;
+User\main.c(483): warning:  #177-D: variable "i"  was declared but never referenced
+  	unsigned char i=0;
+User\main.c(484): warning:  #177-D: variable "temp"  was declared but never referenced
+  	float temp[5]={0},buff=0;
+User\main.c(484): warning:  #177-D: variable "buff"  was declared but never referenced
+  	float temp[5]={0},buff=0;
+User\main.c(485): warning:  #177-D: variable "ADT7301_Temp"  was declared but never referenced
+  	float ADT7301_Temp,DS18B20_Temp,ABStemp;
+User\main.c(13): warning:  #177-D: variable "AppSw"  was declared but never referenced
+  static  CPU_BOOLEAN     AppSw;
+User\main.c: 6 warnings, 0 errors
+compiling Temp.c...
 compiling Modbus.c...
+User\Modbus.c(311): warning:  #186-D: pointless comparison of unsigned integer with zero
+  		if(  (dat < 0x00) || (dat >256)  ){ModbusReturnAckInfo(4);	return ERROR;}   //如果不等于特定值，返回错误
+User\Modbus.c(445): warning:  #186-D: pointless comparison of unsigned integer with zero
+  	if((KeepRegisterTemp.Average_num < 0) || (KeepRegisterTemp.Average_num > 256))err = err_Re_VOR;
 User\Modbus.c(488): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "const char *"
   	if( strncmp(FactorySetValueWord,(unsigned char *)&ModbusDataPackage.dat[2],4) !=0 )err=err_OE;
 User\Modbus.c(488): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "const char *"
@@ -80,32 +98,20 @@ User\Modbus.c(847): warning:  #111-D: statement is unreachable
   	return SUCCESS;
 User\Modbus.c(821): warning:  #177-D: variable "OriginaAltitudeTemp"  was declared but never referenced
   	float OriginaAltitudeTemp=0;
-User\Modbus.c: 18 warnings, 0 errors
-compiling main.c...
-User\main.c(483): warning:  #177-D: variable "i"  was declared but never referenced
-  	unsigned char i=0;
-User\main.c(484): warning:  #177-D: variable "temp"  was declared but never referenced
-  	float temp[5]={0},buff=0;
-User\main.c(484): warning:  #177-D: variable "buff"  was declared but never referenced
-  	float temp[5]={0},buff=0;
-User\main.c(485): warning:  #177-D: variable "ADT7301_Temp"  was declared but never referenced
-  	float ADT7301_Temp,DS18B20_Temp,ABStemp;
-User\main.c(13): warning:  #177-D: variable "AppSw"  was declared but never referenced
-  static  CPU_BOOLEAN     AppSw;
-User\main.c: 5 warnings, 0 errors
+User\Modbus.c: 20 warnings, 0 errors
 compiling PAS.c...
-compiling uart.c...
+compiling IEEPROM.c...
+compiling IADC.c...
 compiling Timer.c...
 HW_driver\Timer.c(16): warning:  #9-D: nested comment is not allowed
   //**********************************************/
 HW_driver\Timer.c: 1 warning, 0 errors
-compiling IEEPROM.c...
-compiling IADC.c...
+compiling uart.c...
 linking...
-Program Size: Code=36804 RO-data=1060 RW-data=324 ZI-data=18636  
+Program Size: Code=36812 RO-data=1060 RW-data=324 ZI-data=18636  
 FromELF: creating hex file...
 After Build - User command #1: D:\Program Files\Keil_v5\\ARM\ARMCC\bin\fromelf.exe --bin --output=Output\Project.bin .\Output\Project.axf
-".\Output\Project.axf" - 0 Error(s), 29 Warning(s).
+".\Output\Project.axf" - 0 Error(s), 32 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -119,7 +125,7 @@ Package Vendor: Keil
   D:\Program Files\Keil_v5\ARM\PACK\Keil\STM32L1xx_DFP\1.2.0\Device\Include
 
 <h2>Collection of Component Files used:</h2>
-Build Time Elapsed:  00:00:04
+Build Time Elapsed:  00:00:03
 </pre>
 </body>
 </html>

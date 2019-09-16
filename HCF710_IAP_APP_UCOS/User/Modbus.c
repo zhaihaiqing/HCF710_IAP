@@ -308,7 +308,7 @@ char ModbusWriteSingleRegistor(unsigned char RX_Len)
 	
 	if(StartAddress == 0x56)							//平均次数
 	{
-		if(  (dat < 0x01) || (dat >256)  ){ModbusReturnAckInfo(4);	return ERROR;}   //如果不等于特定值，返回错误
+		if(  (dat < 0x00) || (dat >256)  ){ModbusReturnAckInfo(4);	return ERROR;}   //如果不等于特定值，返回错误
 		KeepRegister.Average_num = dat;
 		EEWrite(KREEPROM_BASEADDR+172,(void *)&dat,2);//保存数据
 	}
@@ -442,7 +442,7 @@ char ModbusWriteSomeRegistor(void)
 	
 	//判断数据有效性
 	if((KeepRegisterTemp.DeviceAddress == 0) || (KeepRegisterTemp.DeviceAddress > 247))err = err_Re_VOR;	//地址数据超出范围,返回异常功能码,寄存器值超出范围
-	if((KeepRegisterTemp.Average_num < 1) || (KeepRegisterTemp.Average_num > 256))err = err_Re_VOR;
+	if((KeepRegisterTemp.Average_num < 0) || (KeepRegisterTemp.Average_num > 256))err = err_Re_VOR;
 	//if((KeepRegisterTemp.Reserve1and2< 0.5) || (KeepRegisterTemp.Reserve1and2 > 2.0))err = err_Re_VOR;
 	if((KeepRegisterTemp.LocalAccelerationOfGravity< 9.78) || (KeepRegisterTemp.LocalAccelerationOfGravity > 10.0))err = err_Re_VOR;
 	if(!err)																						//如果无错误,则将缓存的数据拷贝到寄存器中

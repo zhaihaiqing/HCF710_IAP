@@ -420,7 +420,7 @@ void AD779x_ContinuousReadData1(unsigned short Average_num)
 		ADC_VAL += ((int)val - 0x800000);
 		AD779x_Sampling_Count1++;
 		
-		if(AD779x_Sampling_Complete_Flag0)
+		if( AD779x_Sampling_Complete_Flag0 || (Average_num==0) )
 		{
 			
 			dataMV=5000.0*ADC_VAL/AD779x_Sampling_Count1/32/8388608;//mV

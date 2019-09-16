@@ -98,7 +98,7 @@ volatile unsigned int   WorkTime = 0;			//工作时间计时，最大900S，区别输入寄存器
 volatile unsigned char  WorkTimeOutFlag = 0;	//工作时间溢出标志位，超过900S未收到指令，置1该位，同时不再喂狗，等待复位
 volatile unsigned char  Temp_Flag=1;            //温度采样标志位，3s采一次
 volatile unsigned char  MainPower_Flag=1;       //主电源电压采样标志位，3s采一次
-volatile unsigned char  MMA8451_Flag=1;       //主电源电压采样标志位，3s采一次
+volatile unsigned char  MMA8451_Flag=1;       	//主电源电压采样标志位，3s采一次
 volatile unsigned int   Time_Count=0;			//采样计数器
 
 volatile IMU_Data_type IMU_Data;
@@ -181,7 +181,7 @@ void Init_Parameter(void)
 	
 	log1_info("time2:%ds\r\n",KeepRegister.Average_num);
 	
-	if((KeepRegister.Average_num<1)||(KeepRegister.Average_num>256))KeepRegister.Average_num=3;
+	if((KeepRegister.Average_num<0)||(KeepRegister.Average_num>256))KeepRegister.Average_num=3;
 	if((KeepRegister.DeviceAddress<1)||(KeepRegister.DeviceAddress>247))KeepRegister.DeviceAddress=1;
 	InputRegister.DeviceType      = DEVICETYPE;
 	InputRegister.SoftwareVersion = SOFTWAREVERSION;
