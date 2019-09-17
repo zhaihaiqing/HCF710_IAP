@@ -28,6 +28,11 @@ Project File Date:  09/17/2019
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'D:\Program Files\Keil_v5\ARM\ARMCC\Bin'
 Build target 'STM32L1xx'
 compiling gpio.c...
+compiling Temp.c...
+compiling stm32l1xx_it.c...
+User\stm32l1xx_it.c(185): warning:  #550-D: variable "tmp"  was set but never used
+  	unsigned char 	Uart_Get_Data,tmp;	//串口1接收的数据
+User\stm32l1xx_it.c: 1 warning, 0 errors
 compiling main.c...
 User\main.c(203): warning:  #186-D: pointless comparison of unsigned integer with zero
   	if((KeepRegister.Average_num<0)||(KeepRegister.Average_num>256))KeepRegister.Average_num=3;
@@ -52,11 +57,7 @@ HW_driver\SPI.c(395): warning:  #177-D: variable "i"  was declared but never ref
 HW_driver\SPI.c(395): warning:  #177-D: variable "j"  was declared but never referenced
   	unsigned short i,j;
 HW_driver\SPI.c: 4 warnings, 0 errors
-compiling stm32l1xx_it.c...
-User\stm32l1xx_it.c(185): warning:  #550-D: variable "tmp"  was set but never used
-  	unsigned char 	Uart_Get_Data,tmp;	//串口1接收的数据
-User\stm32l1xx_it.c: 1 warning, 0 errors
-compiling Temp.c...
+compiling PAS.c...
 compiling Modbus.c...
 User\Modbus.c(309): warning:  #186-D: pointless comparison of unsigned integer with zero
   		if(  (dat < 0x00) || (dat >256)  ){ModbusReturnAckInfo(3);	return ERROR;}   //如果不等于特定值，返回错误
@@ -90,25 +91,24 @@ User\Modbus.c(756): warning:  #167-D: argument of type "unsigned char *" is inco
   	if( strncmp(FactorySetValueWord,(unsigned char *)&ModbusDataPackage.dat[2],4) !=0 )err=err_OE;
 User\Modbus.c(801): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "const char *"
   	if(strncmp(FactoryResetWord,(char *)&ModbusDataPackage.dat[2],4) != 0)err = err_OE;//有效操作发生异常
-User\Modbus.c(873): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "const char *"
+User\Modbus.c(874): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "const char *"
   	if( strncmp(FactoryResetWord,(unsigned char *)&ModbusDataPackage.dat[2],4) !=0 )err=err_OE;
-User\Modbus.c(873): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "const char *"
+User\Modbus.c(874): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "const char *"
   	if( strncmp(FactoryResetWord,(unsigned char *)&ModbusDataPackage.dat[2],4) !=0 )err=err_OE;
-User\Modbus.c(897): warning:  #111-D: statement is unreachable
+User\Modbus.c(898): warning:  #111-D: statement is unreachable
   	return SUCCESS;
-User\Modbus.c(871): warning:  #177-D: variable "OriginaAltitudeTemp"  was declared but never referenced
+User\Modbus.c(872): warning:  #177-D: variable "OriginaAltitudeTemp"  was declared but never referenced
   	float OriginaAltitudeTemp=0;
 User\Modbus.c: 20 warnings, 0 errors
-compiling PAS.c...
-compiling IEEPROM.c...
-compiling uart.c...
 compiling Timer.c...
 HW_driver\Timer.c(16): warning:  #9-D: nested comment is not allowed
   //**********************************************/
 HW_driver\Timer.c: 1 warning, 0 errors
+compiling IEEPROM.c...
 compiling IADC.c...
+compiling uart.c...
 linking...
-Program Size: Code=37104 RO-data=1000 RW-data=320 ZI-data=18640  
+Program Size: Code=37116 RO-data=996 RW-data=320 ZI-data=18640  
 FromELF: creating hex file...
 After Build - User command #1: D:\Program Files\Keil_v5\\ARM\ARMCC\bin\fromelf.exe --bin --output=Output\Project.bin .\Output\Project.axf
 ".\Output\Project.axf" - 0 Error(s), 32 Warning(s).

@@ -843,13 +843,14 @@ char ModbusFactoryParameterReset(unsigned char RX_Len)
 	KeepRegister.DeviceGroupNum = 0;
 	KeepRegister.Sensor_Range = DefaultSensor_Range;
 	KeepRegister.Average_num	=	3;
+	KeepRegister.bps			=   3;
 	
 	EEWrite(KREEPROM_BASEADDR,(void *)&KeepRegister.DeviceAddress,20);//更新EEPROM
 	EEWrite(KREEPROM_BASEADDR+172,(void *)&KeepRegister.Average_num,2);//保存数据
 	
 	
-	
 	if(ModbusDataPackage.dat[0]) U485SendData(temp,KeepRegister_Byte_Num+9);//发送数据,长度=读取字节数+前面三个字节+两个校验；如果是广播命令则不回复。
+	UART1_Configuration(KeepRegister.bps);
 	//SystemResetSoft();
 	//while(1);//等待看门狗复位操作，完成恢复出厂设置
 	
