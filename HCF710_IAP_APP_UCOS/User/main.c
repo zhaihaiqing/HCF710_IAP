@@ -113,54 +113,73 @@ volatile IMU_Data_type IMU_Data;
 void Init_Parameter(void)
 {
 	uint8_t temp[2]={0},i=0;
+	
 	//初始化保持寄存器参数
 	//EEErase(FPOWERONFLAG_BASEADDR,2);
-	EERead(FPOWERONFLAG_BASEADDR,temp,2);//执行标志位判断，确认是否是首次开机
-//	temp[0]=1;
-//	temp[1]=2;
+	EERead(FPOWERONFLAG_BASEADDR,temp,2);//执行首次开机标志位判断，确认是否是首次开机
 	if( (temp[0] != 0x12) && (temp[1] != 0x34) )
 	{
 		//是首次开机
-		log1_info("Device powers on for the first time,and Init Default Parameter. . .\r\n");
-		EERead(KREEPROM_BASEADDR,(void *)&KeepRegister.DeviceAddress,20);//读取EEPROM中存储的保持寄存器值，恢复以下几项
-		KeepRegister.DeviceAddress              = DefaultDeviceADDR;
-		KeepRegister.OriginaLiquidAltitude_After      = 0;
-		KeepRegister.OriginaLiquidAltitude_Befor      = 0;
-		KeepRegister.Liquid_Sec                = (Liquid_FD01_25<<8) | 0x00;
-		KeepRegister.LocalAccelerationOfGravity = DefaultAccelerationOfGravity;
-		KeepRegister.DeviceGroupNum = 0;
-		KeepRegister.Sensor_Range = DefaultSensor_Range;
-		KeepRegister.Average_num	=	3;
+		//log1_info("Device powers on for the first time,and Init Default Parameter. . .\r\n");
+		//EERead(KREEPROM_BASEADDR,(void *)&KeepRegister.DeviceAddress,20);//读取EEPROM中存储的保持寄存器值，恢复以下几项
 		
 		GPIO_PinReverse(GPIOA,GPIO_Pin_1);
-		//EEWrite(KREEPROM_BASEADDR,(void *)&KeepRegister.DeviceAddress,sizeof(KeepRegister));//更新EEPROM
-		EEWrite(KREEPROM_BASEADDR,(void *)&KeepRegister.DeviceAddress,20);//更新EEPROM
 		
-		//将系数全部清零
+		//初始化设备相关参数
+		KeepRegister.DeviceAddress              		= DefaultDeviceADDR;
+		KeepRegister.DeviceGroupNum 					= 0;
+		KeepRegister.OriginaLiquidAltitude_After      	= 0;
+		KeepRegister.OriginaLiquidAltitude_Befor      	= 0;
+		KeepRegister.Sensor_Range 						= DefaultSensor_Range;
+		KeepRegister.Liquid_Sec                			= (Liquid_FD01_25<<8) | 0x00;
+		KeepRegister.LocalAccelerationOfGravity 		= DefaultAccelerationOfGravity;
+		KeepRegister.Sensor_FS_Val						= 0;
+		
+		
+		EEWrite(KREEPROM_BASEADDR,(void *)&KeepRegister.DeviceAddress,24);//更新EEPROM
+		GPIO_PinReverse(GPIOA,GPIO_Pin_1);
+		
+		
+		//初始化线性修正相关参数
+		for(i=0;i<6;i++) KeepRegister.MV[i]=i*10;
+		KeepRegister.Temp_T0 = 20;
+		EEWrite(KREEPROM_BASEADDR+24,(void *)&KeepRegister.MV[0],28);
+		GPIO_PinReverse(GPIOA,GPIO_Pin_1);
+		
+		
+		//将温漂修正系数全部清零
 		for(i=0;i<5;i++) KeepRegister.LTC0[i]=0;
 		for(i=0;i<5;i++) KeepRegister.LTC1[i]=0;
 		for(i=0;i<5;i++) KeepRegister.LTC2[i]=0;
 		for(i=0;i<5;i++) KeepRegister.LTC3[i]=0;
 		for(i=0;i<5;i++) KeepRegister.LTC4[i]=0;
 		for(i=0;i<5;i++) KeepRegister.LTC5[i]=0;
-		
 		EEWrite(KREEPROM_BASEADDR+52,(void *)&KeepRegister.LTC0[0],120);
-		
-		GPIO_PinReverse(GPIOA,GPIO_Pin_1);
-		EEWrite(KREEPROM_BASEADDR+172,(void *)&KeepRegister.Average_num,2);//保存数据
 		GPIO_PinReverse(GPIOA,GPIO_Pin_1);
 		
-		temp[0] = 0x34;
-		temp[1] = 0x12;
-		EEWrite(SUPERMODE_FLAG_BASEADDR,temp,2);
+		
+		//写设备参数
+		KeepRegister.Average_num	=	3;
+		KeepRegister.bps			=	3;
+		EEWrite(KREEPROM_BASEADDR+172,(void *)&KeepRegister.Average_num,4);//保存数据
+		GPIO_PinReverse(GPIOA,GPIO_Pin_1);
+		
+		//写操作模式
 		SuperMode_Flag=1;										//首次开机设置模式为超级模式
 		InputRegister.SystemWorkStatus=(InputRegister.SystemWorkStatus & 0x00ff)|0x0100;
-		
 		temp[0] = 0x12;
 		temp[1] = 0x34;
 		EEWrite(FPOWERONFLAG_BASEADDR,temp,2);
+		GPIO_PinReverse(GPIOA,GPIO_Pin_1);
+		
+		//写首次开机标志位
+		temp[0] = 0x34;
+		temp[1] = 0x12;
+		EEWrite(SUPERMODE_FLAG_BASEADDR,temp,2);
+		GPIO_PinReverse(GPIOA,GPIO_Pin_1);
 	}
 	
+	//读取工作模式
 	temp[0]=0;
 	temp[1]=0;
 	EERead(SUPERMODE_FLAG_BASEADDR,temp,2);
@@ -179,10 +198,11 @@ void Init_Parameter(void)
 	
 	EERead(KREEPROM_BASEADDR,(void *)&KeepRegister,sizeof(KeepRegister));
 	
-	log1_info("time2:%ds\r\n",KeepRegister.Average_num);
+	//log1_info("time2:%ds\r\n",KeepRegister.Average_num);
 	
 	if((KeepRegister.Average_num<0)||(KeepRegister.Average_num>256))KeepRegister.Average_num=3;
 	if((KeepRegister.DeviceAddress<1)||(KeepRegister.DeviceAddress>247))KeepRegister.DeviceAddress=1;
+	if((KeepRegister.bps<1)||(KeepRegister.bps>7))KeepRegister.bps=3;
 	InputRegister.DeviceType      = DEVICETYPE;
 	InputRegister.SoftwareVersion = SOFTWAREVERSION;
 	
@@ -273,11 +293,14 @@ static  void  AppTaskStart (void *p_arg)
 		/**			外设初始化			**/
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_3);//中断优先级分组
 	GPIO_Configuration();
-	UART1_Configuration(COM_UART_bps);
+	
+	Init_Parameter();
+	
+	UART1_Configuration(KeepRegister.bps);
 	SPI1_Configuration();
 	AD779x_Init();
 	
-	Init_Parameter();
+	
 	
 	log1_info("cpu_clk_freq:%dHz\r\n",cpu_clk_freq);
 	log1_info("NVIC_PriorityGroup_3\r\n");

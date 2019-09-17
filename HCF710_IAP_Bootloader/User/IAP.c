@@ -337,6 +337,13 @@ unsigned char Update_Firmware(void)
 				}
 				else	//数据接收完成
 				{
+					//首先恢复出厂设置
+					
+					tem[0]=0;
+					tem[1]=0;
+					EEWrite(0x296,tem,2);//擦除APP程序首次开机标志位
+					
+					
 					tem[0]=BL_Data.DeviceAddress;
 					tem[1]=0xB7;
 					tem[2]=	 (BL_Data.Program_Size&0xff000000)>>24;

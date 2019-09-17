@@ -73,6 +73,7 @@ typedef struct __attribute__ ((__packed__))   //声明结构体变量，结构体对齐方式为
 	float    LTC4[5];           				// 4/5负载下修正值-温度曲线系数，4阶
 	float    LTC5[5];           				// 满负载下修正值-温度曲线系数，4阶
 	unsigned short	Average_num;
+	unsigned short  bps;
 	
 }KeepRegister_type;
 

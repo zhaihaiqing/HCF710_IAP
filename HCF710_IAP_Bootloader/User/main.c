@@ -55,7 +55,7 @@ void Init_Hardware(void)
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);//中断优先级分组
 	Init_SysTick();//开启SysTick定时器
 	GPIO_Configuration();
-	UART1_Configuration(38400);
+	UART1_Configuration(9600);
 
 	log_info("Run in BootLoader,Hardware has init!\r\n");
 	

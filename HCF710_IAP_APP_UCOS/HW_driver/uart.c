@@ -39,11 +39,26 @@ UART3_RBUF_ST	uart3_rbuf	=	{ 0, 0, };
 * 入口参数
 * baudrate:波特率
 **********************************************************************************/
-void UART1_Configuration(unsigned int baudrate)
+void UART1_Configuration(unsigned int baud_sel)
 {
+	unsigned int baudrate=0;
+	
 	USART_InitTypeDef USART_InitStructure;
 	GPIO_InitTypeDef GPIO_InitStructure;
 	NVIC_InitTypeDef NVIC_InitStructure;
+	
+	switch(baud_sel)
+	{
+		case 0x01:	baudrate=2400;		break;
+		case 0x02:	baudrate=4800;		break;
+		case 0x03:	baudrate=9600;		break;
+		case 0x04:	baudrate=19200;		break;
+		case 0x05:	baudrate=38400;		break;
+		case 0x06:	baudrate=57600;		break;
+		case 0x07:	baudrate=115200;	break;
+		default:	baudrate=9600;		break;
+	}
+	
 	
 	/* Enable the USART1 Interrupt */
 	NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;

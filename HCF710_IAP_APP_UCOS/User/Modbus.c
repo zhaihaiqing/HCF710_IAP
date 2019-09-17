@@ -115,6 +115,7 @@ void KeepRegistorDataHton(void)
 	for(i=0;i<5;i++)KeepRegisterTemp.LTC4[i] = __ltobf(KeepRegister.LTC4[i]);
 	for(i=0;i<5;i++)KeepRegisterTemp.LTC5[i] = __ltobf(KeepRegister.LTC5[i]);	
 	KeepRegisterTemp.Average_num =htons(KeepRegister.Average_num);
+	KeepRegisterTemp.bps =htons(KeepRegister.bps);
 }
 /*******************************************************************************
 * Function Name  : InputRegistorDataHton
@@ -273,16 +274,13 @@ char ModbusWriteSingleRegistor(unsigned char RX_Len)
 	
 	//参数合法检查
 	if(RX_Len != 8)err = err_OE;	//有效操作发生异常
-	if((StartAddress != 0) && (StartAddress != 1) && (StartAddress != 6) && (StartAddress != 7) && (StartAddress != 0x56))err = err_add;			//异常码,寄存器开始地址不正确,多字节数据不可用此功能码
+	if((StartAddress != 0) && (StartAddress != 1) && (StartAddress != 6) && (StartAddress != 7) && (StartAddress != 0x56) && (StartAddress != 0x57))err = err_add;			//异常码,寄存器开始地址不正确,多字节数据不可用此功能码
 	//数据有效范围判断并写入
 	if(StartAddress == 0)							//如果写设备地址数据
 	{
-		if((dat == 0) || (dat > 247))err = err_add;	//地址数据超出范围,返回异常功能码,寄存器值超出范围
-		else
-		{
-			KeepRegister.DeviceAddress = dat;
-			EEWrite(KREEPROM_BASEADDR,(void *)&dat,2);//保存数据
-		}
+		if((dat == 0) || (dat > 247)){ModbusReturnAckInfo(3);	return ERROR;}	//地址数据超出范围,返回异常功能码,寄存器值超出范围
+		KeepRegister.DeviceAddress = dat;
+		EEWrite(KREEPROM_BASEADDR,(void *)&dat,2);//保存数据
 	}
 	
 	if(StartAddress == 1)							//如果写设备组号
@@ -293,14 +291,14 @@ char ModbusWriteSingleRegistor(unsigned char RX_Len)
 	
 	if(StartAddress == 6)							//如果写传感器量程
 	{
-		if( ((dat == 0x14) || (dat == 0x64)) ==0 ){ModbusReturnAckInfo(4);	return ERROR;}
+		if( ((dat == 0x14) || (dat == 0x64)) ==0 ){ModbusReturnAckInfo(3);	return ERROR;}
 		KeepRegister.Sensor_Range = dat;
 		EEWrite(KREEPROM_BASEADDR+12,(void *)&dat,2);//保存数据
 	}
 	
 	if(StartAddress == 7)							//如果
 	{
-		if( ( ((dat >>8) == 0x01) || ((dat >>8) == 0x02) || ((dat >>8) ==0x03) || ((dat >>8) ==0x04) || ((dat >>8)==0x05) ) ==0  ){ModbusReturnAckInfo(4);	return ERROR;}   //如果不等于特定值，返回错误
+		if( ( ((dat >>8) == 0x01) || ((dat >>8) == 0x02) || ((dat >>8) ==0x03) || ((dat >>8) ==0x04) || ((dat >>8)==0x05) ) ==0  ){ModbusReturnAckInfo(3);	return ERROR;}   //如果不等于特定值，返回错误
 		//if( ( ((dat & 0x00FF)==0x00) || ((dat & 0x00FF)==0x01))  ==0  ){ModbusReturnAckInfo(4);	return ERROR;}
 		KeepRegister.Liquid_Sec = dat;
 		EEWrite(KREEPROM_BASEADDR+14,(void *)&dat,2);//保存数据
@@ -308,9 +306,15 @@ char ModbusWriteSingleRegistor(unsigned char RX_Len)
 	
 	if(StartAddress == 0x56)							//平均次数
 	{
-		if(  (dat < 0x00) || (dat >256)  ){ModbusReturnAckInfo(4);	return ERROR;}   //如果不等于特定值，返回错误
+		if(  (dat < 0x00) || (dat >256)  ){ModbusReturnAckInfo(3);	return ERROR;}   //如果不等于特定值，返回错误
 		KeepRegister.Average_num = dat;
 		EEWrite(KREEPROM_BASEADDR+172,(void *)&dat,2);//保存数据
+	}
+	if(StartAddress == 0x57)							//平均次数
+	{
+		if(  (dat < 0x01) || (dat >0x07)  ){ModbusReturnAckInfo(3);	return ERROR;}   //如果不等于特定值，返回错误
+		KeepRegister.Average_num = dat;
+		EEWrite(KREEPROM_BASEADDR+174,(void *)&dat,2);//保存数据
 	}
 	
 	if(  err != 0 )			//返回异常码信息
@@ -441,9 +445,9 @@ char ModbusWriteSomeRegistor(void)
 	if((StartAddress <= 0x56) && (StopAddress >= 0x56))KeepRegisterTemp.Average_num = htons(KeepRegisterTemp.Average_num );
 	
 	//判断数据有效性
-	if((KeepRegisterTemp.DeviceAddress == 0) || (KeepRegisterTemp.DeviceAddress > 247))err = err_Re_VOR;	//地址数据超出范围,返回异常功能码,寄存器值超出范围
-	if((KeepRegisterTemp.Average_num < 0) || (KeepRegisterTemp.Average_num > 256))err = err_Re_VOR;
-	//if((KeepRegisterTemp.Reserve1and2< 0.5) || (KeepRegisterTemp.Reserve1and2 > 2.0))err = err_Re_VOR;
+	if((KeepRegisterTemp.DeviceAddress == 0) || (KeepRegisterTemp.DeviceAddress > 247))	err = err_Re_VOR;	//地址数据超出范围,返回异常功能码,寄存器值超出范围
+	if((KeepRegisterTemp.Average_num < 0) || (KeepRegisterTemp.Average_num > 256))		err = err_Re_VOR;
+	if((KeepRegisterTemp.bps< 0x01) || (KeepRegisterTemp.bps > 0x07))					err = err_Re_VOR;
 	if((KeepRegisterTemp.LocalAccelerationOfGravity< 9.78) || (KeepRegisterTemp.LocalAccelerationOfGravity > 10.0))err = err_Re_VOR;
 	if(!err)																						//如果无错误,则将缓存的数据拷贝到寄存器中
 	{
