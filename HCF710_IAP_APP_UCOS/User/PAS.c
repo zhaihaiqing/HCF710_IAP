@@ -182,33 +182,34 @@ void Level_height_conversion(float ADS_R,float ADT_temp)
 	**计算液体密度
 	******************************************************************/
 	//根据液体类型，计算液体密度参数
- 	if((KeepRegister.Liquid_Sec&0x0F00) == 0x0100)      {LD_V[0] =  0.00000001874 ; LD_V[1] = -0.000006231;  LD_V[2] =  0.0000262; LD_V[3] = 1     ;}       //纯净水
- 	else if((KeepRegister.Liquid_Sec&0x0F00) == 0x0200) {LD_V[0] =  0.000000002806; LD_V[1] = -0.000002759;  LD_V[2] = -0.0003734; LD_V[3] = 1.075 ;}       //长城FD-1型 -25℃防冻液
- 	else if((KeepRegister.Liquid_Sec&0x0F00) == 0x0300) {LD_V[0] = -0.00000003493;  LD_V[1] =  0.000001245;  LD_V[2] = -0.0005355; LD_V[3] = 1.096; }       //长城YF-2A型 -45℃防冻液
- 	else if((KeepRegister.Liquid_Sec&0x0F00) == 0x0400) {LD_V[0] = -0.00000003079;  LD_V[1] =  0.0000006097; LD_V[2] = -0.0004351; LD_V[3] = 1.078; }       //壳牌OAT -30℃防冻液
- 	else if((KeepRegister.Liquid_Sec&0x0F00) == 0x0500) {LD_V[0] = -0.00000002093;  LD_V[1] = -0.0000001951; LD_V[2] = -0.0004336; LD_V[3] = 1.09;  }       //壳牌OAT -45℃
+// 	if((KeepRegister.Liquid_Sec&0x0F00) == 0x0100)      {LD_V[0] =  0.00000001874 ; LD_V[1] = -0.000006231;  LD_V[2] =  0.0000262; LD_V[3] = 1     ;}       //纯净水
+// 	else if((KeepRegister.Liquid_Sec&0x0F00) == 0x0200) {LD_V[0] =  0.000000002806; LD_V[1] = -0.000002759;  LD_V[2] = -0.0003734; LD_V[3] = 1.075 ;}       //长城FD-1型 -25℃防冻液
+// 	else if((KeepRegister.Liquid_Sec&0x0F00) == 0x0300) {LD_V[0] = -0.00000003493;  LD_V[1] =  0.000001245;  LD_V[2] = -0.0005355; LD_V[3] = 1.096; }       //长城YF-2A型 -45℃防冻液
+// 	else if((KeepRegister.Liquid_Sec&0x0F00) == 0x0400) {LD_V[0] = -0.00000003079;  LD_V[1] =  0.0000006097; LD_V[2] = -0.0004351; LD_V[3] = 1.078; }       //壳牌OAT -30℃防冻液
+// 	else if((KeepRegister.Liquid_Sec&0x0F00) == 0x0500) {LD_V[0] = -0.00000002093;  LD_V[1] = -0.0000001951; LD_V[2] = -0.0004336; LD_V[3] = 1.09;  }       //壳牌OAT -45℃
 		
-//	if((KeepRegister.Liquid_Sec&0x0F00) == 0x0100)      Liquid_B = 1     ;       //纯净水
-// 	else if((KeepRegister.Liquid_Sec&0x0F00) == 0x0200) Liquid_B = 1.075 ;       //长城FD-1型 -25℃防冻液
-// 	else if((KeepRegister.Liquid_Sec&0x0F00) == 0x0300) Liquid_B = 1.096 ;        //长城YF-2A型 -45℃防冻液
-// 	else if((KeepRegister.Liquid_Sec&0x0F00) == 0x0400) Liquid_B = 1.078 ;       //壳牌OAT -30℃防冻液
-// 	else if((KeepRegister.Liquid_Sec&0x0F00) == 0x0500) Liquid_B = 1.09  ;        //壳牌OAT -45℃
+	if((KeepRegister.Liquid_Sec&0x0F00) == 0x0100)      Liquid_B = 1     ;       //纯净水
+ 	else if((KeepRegister.Liquid_Sec&0x0F00) == 0x0200) Liquid_B = 1.075 ;       //长城FD-1型 -25℃防冻液
+ 	else if((KeepRegister.Liquid_Sec&0x0F00) == 0x0300) Liquid_B = 1.096 ;        //长城YF-2A型 -45℃防冻液
+ 	else if((KeepRegister.Liquid_Sec&0x0F00) == 0x0400) Liquid_B = 1.078 ;       //壳牌OAT -30℃防冻液
+ 	else if((KeepRegister.Liquid_Sec&0x0F00) == 0x0500) Liquid_B = 1.09  ;        //壳牌OAT -45℃
 	
- 	T_d=20;
-	Liquid_B=LD_V[0]*T_d*T_d*T_d + LD_V[1]*T_d*T_d + LD_V[2]*T_d + LD_V[3];  //计算在20℃下的液体密度
-//	//log_info("Liquid_B:%f\r\n",Liquid_B);
-//		
-	T_d=ADT_temp;  //获取当前温度
-	Liquid_D=LD_V[0]*T_d*T_d*T_d + LD_V[1]*T_d*T_d + LD_V[2]*T_d + LD_V[3];  //计算液体密度 
-	//Liquid_D = Liquid_B;
-//	//log_info("Liquid_D:%f\r\n",Liquid_D);
+// 	T_d=20;
+//	Liquid_B=LD_V[0]*T_d*T_d*T_d + LD_V[1]*T_d*T_d + LD_V[2]*T_d + LD_V[3];  //计算在20℃下的液体密度
+//////log_info("Liquid_B:%f\r\n",Liquid_B);
+////		
+//	Liquid_D=LD_V[0]*T_d*T_d*T_d + LD_V[1]*T_d*T_d + LD_V[2]*T_d + LD_V[3];  //计算液体密度 
+
+	
+	
 	
 	/************************************************************************
 	**多阶线性校准                                                           
 	************************************************************************/
 	for(i=0;i<6;i++) SV[i]= i*(float)KeepRegister.Sensor_Range*1000/5;       //计算五阶校准标准点
 	
-	
+	T_d=ADT_temp;  //获取当前温度
+	Liquid_D = Liquid_B;
 	ADCValue = ADS_R;	                             //采样
 		
 	//传感器五阶校准，同时将电信号（mV）转换为压力信号（Pa）
@@ -227,8 +228,6 @@ void Level_height_conversion(float ADS_R,float ADT_temp)
 	/*       计算温漂修正后的高度数据               */
 	OriginaAltitudeTemp= ( PA/(Liquid_D*1000*KeepRegister.LocalAccelerationOfGravity) );   //p=ρgh+此地的大气压 ρ:水：1.0X1000 Kg/m3    g：9.8N/kg     高度:m
 	OriginaAltitudeTemp =OriginaAltitudeTemp*1000;//转换成mm
-	
-	
 	
 	/************************************************************************
 	**多负载温度修正                                                         
@@ -269,7 +268,7 @@ void Level_height_conversion(float ADS_R,float ADT_temp)
 	
 	OriginaAltitudeTemp=OriginaAltitudeTemp - Cor_result; 
 
-	//InputRegister.ADCOriginalValue = ADCValue;													//将ADC原始采样值（mV）存入输入寄存器
+														//将ADC原始采样值（mV）存入输入寄存器
 	InputRegister.PA  =  PA;
 	InputRegister.LiquidAltitudeAbsoluteValue_After = OriginaAltitudeTemp;							//将采集到的液位绝对高度值存入输入寄存器
 	InputRegister.AltitudeDifference_After= OriginaAltitudeTemp - KeepRegister.OriginaLiquidAltitude_After;	//计算高度差，之后将数据存入输入寄存器
