@@ -267,6 +267,7 @@ char ModbusWriteSingleRegistor(unsigned char RX_Len)
 {
 	uint8_t err=0;
 	uint8_t temp[10];
+	uint8_t flag=0;
 	uint16_t crc,dat;
 	//获取相关参数
 	uint16_t StartAddress = (ModbusDataPackage.dat[2] << 8) | ModbusDataPackage.dat[3];	//获取起始地址
@@ -276,6 +277,13 @@ char ModbusWriteSingleRegistor(unsigned char RX_Len)
 	if(RX_Len != 8)err = err_OE;	//有效操作发生异常
 	if((StartAddress != 0) && (StartAddress != 1) && (StartAddress != 6) && (StartAddress != 7) && (StartAddress != 0x56) && (StartAddress != 0x57))err = err_add;			//异常码,寄存器开始地址不正确,多字节数据不可用此功能码
 	//数据有效范围判断并写入
+	
+	
+	
+	//if(StopAddress > 0x09)flag=1;		//判定操作危险寄存器标志位
+	if(StartAddress > 0x09)flag=1;		//判定操作危险寄存器标志位
+	if( (SuperMode_Flag==0) && (flag==1) ){ModbusReturnAckInfo(err_mode);return ERROR;}		//如果是普通模式，同时操作到危险寄存器，则返回错误
+	
 	
 	switch(StartAddress)
 	{
