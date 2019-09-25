@@ -274,8 +274,8 @@ char ModbusWriteSingleRegistor(unsigned char RX_Len)
 	dat = (ModbusDataPackage.dat[4] << 8) | ModbusDataPackage.dat[5];					//获取要写入的数据
 	
 	//参数合法检查
-	if(RX_Len != 8)err = err_OE;	//有效操作发生异常
-	if((StartAddress != 0) && (StartAddress != 1) && (StartAddress != 6) && (StartAddress != 7) && (StartAddress != 0x56) && (StartAddress != 0x57))err = err_add;			//异常码,寄存器开始地址不正确,多字节数据不可用此功能码
+	if(RX_Len != 8){ModbusReturnAckInfo(err_OE);return ERROR;}	//有效操作发生异常
+	if((StartAddress != 0) && (StartAddress != 1) && (StartAddress != 6) && (StartAddress != 7) && (StartAddress != 0x56) && (StartAddress != 0x57)){ModbusReturnAckInfo(err_add);return ERROR;}//异常码,寄存器开始地址不正确,多字节数据不可用此功能码
 	//数据有效范围判断并写入
 	
 	
