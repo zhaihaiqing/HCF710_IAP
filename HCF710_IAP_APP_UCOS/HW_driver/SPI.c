@@ -426,7 +426,7 @@ void AD779x_ContinuousReadData1(unsigned short Average_num)
 			dataMV=5000.0*ADC_VAL/AD779x_Sampling_Count1/32/8388608;//mV
 			
 			InputRegister.ADCOriginalValue = dataMV;
-			log1_info("dataMV=%fmV,Average_num=%d,Sampling_Time:%ds\r\n",dataMV,AD779x_Sampling_Count1,Average_num);
+			//log1_info("dataMV=%fmV,Average_num=%d,Sampling_Time:%ds\r\n",dataMV,AD779x_Sampling_Count1,Average_num);
 			
 			
 			ADC_VAL=0;

@@ -9,6 +9,7 @@
   */
 
 #include "main.h"
+//#include "os_cpu.h"
 
 static  CPU_BOOLEAN     AppSw;
 
@@ -506,31 +507,32 @@ void TEMP_Task(void *p_arg)
 	unsigned char i=0;
 	float temp[5]={0},buff=0;
 	float ADT7301_Temp,DS18B20_Temp,ABStemp;
-	
-	//CPU_SR_ALLOC();
+	//OS_CPU_SR cpu_sr=0;
+	CPU_SR_ALLOC();
 	p_arg = p_arg;
 	
 	GPIO_Configuration();
 	
 	OSTimeDlyHMSM(0,0,2,0,OS_OPT_TIME_HMSM_STRICT,&err); //延时200ms
-	OSSchedLock(&err);//关闭任务调度
+	
+	//OSSchedLock(&err);//关闭任务调度
 	DS18B20_Temp=DS18B20_TEMP();
-	OSSchedUnlock(&err);//恢复调度
+	//OSSchedUnlock(&err);//恢复调度
 
 	OSTimeDlyHMSM(0,0,1,0,OS_OPT_TIME_HMSM_STRICT,&err); //延时200ms
-	OSSchedLock(&err);//关闭任务调度
+	//OSSchedLock(&err);//关闭任务调度
 	DS18B20_Temp=DS18B20_TEMP();
-	OSSchedUnlock(&err);//恢复调度 	
+	//OSSchedUnlock(&err);//恢复调度 	
 	Old_Temp=DS18B20_Temp;
 	
 	while(1)
 	{
 		InputRegister.SystemWorkStatus=(InputRegister.SystemWorkStatus & 0xff00)|0x21;	
 		
-		OSSchedLock(&err);//关闭任务调度
+		//OSSchedLock(&err);//关闭任务调度
 		DS18B20_Temp=DS18B20_TEMP();
-		//log1_info("DS18B20_temp1:%.3f℃\r\n",DS18B20_Temp);
-		OSSchedUnlock(&err);//恢复调度  
+		//OSSchedUnlock(&err);//恢复调度  
+		//log1_info("DS18B20_temp:%.3f℃\r\n",DS18B20_Temp);
 		
 		ABStemp = (DS18B20_Temp>Old_Temp)?(DS18B20_Temp-Old_Temp):(Old_Temp-DS18B20_Temp);
 		if( (DS18B20_Temp>=-40) && (DS18B20_Temp<=85) )

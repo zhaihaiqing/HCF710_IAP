@@ -54,7 +54,7 @@ uint16_t CRC16_Check(uint8_t *Pushdata,uint8_t length)
 返回格式:器件地址(1字节)+功能码(0x40)+数据数量(1字节)+SN信息(15字节)+校验(2字节)
 操作码:0x33,0x55,0x77,0x99
 ************************************************************************/
-const char __progmem_smartbow_start[32] = "**SUP43214321123**4";
+const char __progmem_smartbow_start[32] = "**TESTHCF7101002**5";
 char Get_SNInfo_Fun(void)
 {
 	unsigned char i;

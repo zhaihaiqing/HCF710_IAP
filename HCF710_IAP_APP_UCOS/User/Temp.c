@@ -61,6 +61,16 @@ void DS18B20_delayus(unsigned int us)
 #define ds18b20_t_4us	1
 #define ds18b20_t_2us	0
 
+
+//cpu_clk=7.3728MHz
+//#define ds18b20_t_538us	480
+//#define ds18b20_t_69us	60
+//#define ds18b20_t_66us	58
+//#define ds18b20_t_63us	55
+//#define ds18b20_t_6us	2
+//#define ds18b20_t_4us	1
+//#define ds18b20_t_2us	0
+
 //cpu_clk=29.4912MHz
 //#define ds18b20_t_538us	2000
 //#define ds18b20_t_69us	250
@@ -75,14 +85,14 @@ unsigned char DS18B20_Rst(void)			//复位DS18B20
 	unsigned char dat;
 	SET_DS18B20_DQ_OUT;
 	DQ_OUT_L;//拉低
-	DS18B20_delayus(ds18b20_t_538us);//538us
+	DS18B20_delayus(480);//538us
 	DQ_OUT_H;
 	SET_DS18B20_DQ_IN;
-	DS18B20_delayus(ds18b20_t_63us);//63us
+	DS18B20_delayus(55);//60us
 	
 	dat=DQ_Read();
 	
-	DS18B20_delayus(ds18b20_t_538us);//538us
+	DS18B20_delayus(480);//524us
 	SET_DS18B20_DQ_OUT;
 	DQ_OUT_H;
 	return dat;	
@@ -98,12 +108,12 @@ unsigned char DS18B20_Read_Byte(void)
 		SET_DS18B20_DQ_OUT;//设置为输出
 		
 		DQ_OUT_L;					//拉低总线
-		DS18B20_delayus(ds18b20_t_4us);
+		__nop();__nop();
 		SET_DS18B20_DQ_IN;//设置成输入，由外部上拉电阻将总线拉高，释放总线
-		DS18B20_delayus(ds18b20_t_2us);
+		__nop();
 		if(DQ_Read())//获取端口值
 		dat|=0x80;
-		DS18B20_delayus(ds18b20_t_66us);//66us
+		DS18B20_delayus(58);//66us
 	}
 	SET_DS18B20_DQ_OUT;
 	return dat;
@@ -120,16 +130,16 @@ void DS18B20_Write_Byte(unsigned char dat)
 		if(dat&0x01)
 		{	
 			DQ_OUT_L;//写时间空隙总是从总线的低电平开始
-			DS18B20_delayus(ds18b20_t_6us);//15us内拉高
+			DS18B20_delayus(2);//15us内拉高
 			DQ_OUT_H;
-			DS18B20_delayus(ds18b20_t_69us);//66us//整个写1时隙不低于60us
+			DS18B20_delayus(58);//69us//整个写1时隙不低于60us
 		}
 		else
 		{
 			DQ_OUT_L;
-			DS18B20_delayus(ds18b20_t_69us);//保持在60-120us之间
+			DS18B20_delayus(60);//保持在60-120us之间
 			DQ_OUT_H;
-			DS18B20_delayus(ds18b20_t_6us);//
+			DS18B20_delayus(2);//
 		}
 		dat>>=1;
 	}
@@ -166,59 +176,28 @@ void DS18B20_SendConV_Command(void)
 	DS18B20_Write_Byte(0x44);
 }
 
-float DS18B20_get_TEMP(void)
-{
-	float tt,result;
-	unsigned short temp;
-	unsigned char a,b;
-	
-	//__disable_irq();
-	if(DS18B20_Rst())
-	{
-		//__enable_irq();
-		return -85;
-	}
-	DS18B20_Write_Byte(0xcc);
-	DS18B20_Write_Byte(0xbe);
-	a=DS18B20_Read_Byte();
-	b=DS18B20_Read_Byte();
-	//__enable_irq();
-	temp=(b<<8) | a ;
-
-	if(temp & 0xf800)
-	{
-		temp=~temp+1;
-		tt=temp*0.0625;
-		//tt=tt+0.5;//温度数据，+5是四舍五入
-		result= 0-tt;
-	}
-	else 
-	{
-		tt=temp*0.0625;
-		//tt=tt+0.5;//温度数据，+5是四舍五入
-		result = tt;
-	}
-	//log_info("DS18B20:%.2f\r\n",result);
-	return result;
-}
-
-
 float DS18B20_TEMP(void)
 {
 	float tt,result;
 	unsigned short temp;
 	unsigned char a,b;
 	
+	CPU_SR_ALLOC();
+	
 //	if(DS18B20_Rst());
 //	DS18B20_ReadROM();
+	
+	OS_CRITICAL_ENTER();
 	
 	if(DS18B20_Rst())
 	{
 		return -85;
 	}
+	
+	
 	DS18B20_Write_Byte(0xcc);
 	DS18B20_Write_Byte(0x44);
-
+	
 	if(DS18B20_Rst())
 	{
 		return -85;
@@ -228,8 +207,13 @@ float DS18B20_TEMP(void)
 	a=DS18B20_Read_Byte();
 	b=DS18B20_Read_Byte();
 	
+	OS_CRITICAL_EXIT();
+	
+	
+	
+	
 	temp=(b<<8) | a ;
-	//log1_info("DS18B20_1:0x%x\r\n",temp);
+	log1_info("DS18B20_1:0x%x   ",temp);
 	
 	
 	if(temp & 0xf800)
@@ -248,8 +232,8 @@ float DS18B20_TEMP(void)
 		result = tt;
 		//log_info("DS18B20_2:%.2f\r\n",result);
 	}
-	temp=2;
-	//log1_info("DS18B20:%.2f\r\n",result);
+
+	log1_info("DS18B20:%.2f\r\n",result);
 	return result;
 }
 
