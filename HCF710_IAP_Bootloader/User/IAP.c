@@ -152,7 +152,7 @@ unsigned char Update_Firmware(void)
 {
 	unsigned char tem[12]={0};
 	unsigned int databuf[BYTES_NUM_EACH_TRAN/4]={0};
-	unsigned short i=0,j=0,M_crc=0,count=0;
+	unsigned short i=0,j=0,M_crc=0,count=0,datbuf=0;
 
 	//固件升级需要三步骤
 	//第一步，等待握手信息,等待时长10s
@@ -339,9 +339,9 @@ unsigned char Update_Firmware(void)
 				{
 					//首先恢复出厂设置
 					
-					tem[0]=0;
-					tem[1]=0;
-					EEWrite(0x296,tem,2);//擦除APP程序首次开机标志位
+					
+					datbuf=0x03;
+					EEWrite(0x280+0x32+174,(void *)&datbuf,2);//修改波特率为9600
 					
 					
 					tem[0]=BL_Data.DeviceAddress;

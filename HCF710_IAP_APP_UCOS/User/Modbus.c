@@ -314,7 +314,7 @@ char ModbusWriteSingleRegistor(unsigned char RX_Len)
 			break;
 		case 0x57:
 			if(  (dat < 0x01) || (dat >0x07)  ){ModbusReturnAckInfo(3);	return ERROR;}   //如果不等于特定值，返回错误
-			KeepRegister.Average_num = dat;
+			KeepRegister.bps = dat;
 			EEWrite(KREEPROM_BASEADDR+174,(void *)&dat,2);//保存数据
 			break;
 		default:
@@ -360,7 +360,7 @@ char ModbusWriteSingleRegistor(unsigned char RX_Len)
 //	if(StartAddress == 0x57)							//平均次数
 //	{
 //		if(  (dat < 0x01) || (dat >0x07)  ){ModbusReturnAckInfo(3);	return ERROR;}   //如果不等于特定值，返回错误
-//		KeepRegister.Average_num = dat;
+//		KeepRegister.bps = dat;
 //		EEWrite(KREEPROM_BASEADDR+174,(void *)&dat,2);//保存数据
 //	}
 	
