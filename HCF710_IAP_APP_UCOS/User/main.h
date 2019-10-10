@@ -144,6 +144,7 @@ extern volatile unsigned int SysTick_Count;
 extern volatile unsigned int SysTick_Count1;
 extern volatile unsigned int TimingDelay;
 
+extern unsigned char ad7799_ID,ad7799_status;
 
 /* Exported functions ------------------------------------------------------- */
 void Delay(volatile unsigned int nTime);

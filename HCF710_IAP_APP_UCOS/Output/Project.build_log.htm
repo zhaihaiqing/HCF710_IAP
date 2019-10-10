@@ -22,12 +22,41 @@ Dialog DLL:      TCM.DLL V1.35.1.0
  
 <h2>Project:</h2>
 E:\HD\HCF710\HCF710_IAP\HCF710_IAP_APP_UCOS\Project.uvprojx
-Project File Date:  09/29/2019
+Project File Date:  10/10/2019
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'D:\Program Files\Keil_v5\ARM\ARMCC\Bin'
 Build target 'STM32L1xx'
 compiling gpio.c...
+compiling main.c...
+User\main.c(204): warning:  #186-D: pointless comparison of unsigned integer with zero
+  	if((KeepRegister.Average_num<0)||(KeepRegister.Average_num>256))KeepRegister.Average_num=3;
+User\main.c(508): warning:  #177-D: variable "i"  was declared but never referenced
+  	unsigned char i=0;
+User\main.c(509): warning:  #177-D: variable "temp"  was declared but never referenced
+  	float temp[5]={0},buff=0;
+User\main.c(509): warning:  #177-D: variable "buff"  was declared but never referenced
+  	float temp[5]={0},buff=0;
+User\main.c(510): warning:  #177-D: variable "ADT7301_Temp"  was declared but never referenced
+  	float ADT7301_Temp,DS18B20_Temp,ABStemp;
+User\main.c(512): warning:  #177-D: variable "cpu_sr"  was declared but never referenced
+  	CPU_SR_ALLOC();
+User\main.c(14): warning:  #177-D: variable "AppSw"  was declared but never referenced
+  static  CPU_BOOLEAN     AppSw;
+User\main.c: 7 warnings, 0 errors
+compiling SPI.c...
+HW_driver\SPI.c(289): warning:  #550-D: variable "buf"  was set but never used
+  	unsigned int buf;
+HW_driver\SPI.c(400): warning:  #177-D: variable "i"  was declared but never referenced
+  	unsigned short i,j;
+HW_driver\SPI.c(400): warning:  #177-D: variable "j"  was declared but never referenced
+  	unsigned short i,j;
+HW_driver\SPI.c: 3 warnings, 0 errors
+compiling Temp.c...
+compiling stm32l1xx_it.c...
+User\stm32l1xx_it.c(185): warning:  #550-D: variable "tmp"  was set but never used
+  	unsigned char 	Uart_Get_Data,tmp;	//串口1接收的数据
+User\stm32l1xx_it.c: 1 warning, 0 errors
 compiling PAS.c...
 User\PAS.c(179): warning:  #177-D: variable "LD_V"  was declared but never referenced
   	double LD_V[4]={0};
@@ -76,49 +105,18 @@ User\Modbus.c(958): warning:  #111-D: statement is unreachable
 User\Modbus.c(932): warning:  #177-D: variable "OriginaAltitudeTemp"  was declared but never referenced
   	float OriginaAltitudeTemp=0;
 User\Modbus.c: 21 warnings, 0 errors
-compiling main.c...
-User\main.c(204): warning:  #186-D: pointless comparison of unsigned integer with zero
-  	if((KeepRegister.Average_num<0)||(KeepRegister.Average_num>256))KeepRegister.Average_num=3;
-User\main.c(507): warning:  #177-D: variable "i"  was declared but never referenced
-  	unsigned char i=0;
-User\main.c(508): warning:  #177-D: variable "temp"  was declared but never referenced
-  	float temp[5]={0},buff=0;
-User\main.c(508): warning:  #177-D: variable "buff"  was declared but never referenced
-  	float temp[5]={0},buff=0;
-User\main.c(509): warning:  #177-D: variable "ADT7301_Temp"  was declared but never referenced
-  	float ADT7301_Temp,DS18B20_Temp,ABStemp;
-User\main.c(511): warning:  #177-D: variable "cpu_sr"  was declared but never referenced
-  	CPU_SR_ALLOC();
-User\main.c(14): warning:  #177-D: variable "AppSw"  was declared but never referenced
-  static  CPU_BOOLEAN     AppSw;
-User\main.c: 7 warnings, 0 errors
-compiling stm32l1xx_it.c...
-User\stm32l1xx_it.c(185): warning:  #550-D: variable "tmp"  was set but never used
-  	unsigned char 	Uart_Get_Data,tmp;	//串口1接收的数据
-User\stm32l1xx_it.c: 1 warning, 0 errors
-compiling SPI.c...
-HW_driver\SPI.c(288): warning:  #550-D: variable "ID"  was set but never used
-  	unsigned char Status=0,ID=0;
-HW_driver\SPI.c(289): warning:  #550-D: variable "buf"  was set but never used
-  	unsigned int buf;
-HW_driver\SPI.c(395): warning:  #177-D: variable "i"  was declared but never referenced
-  	unsigned short i,j;
-HW_driver\SPI.c(395): warning:  #177-D: variable "j"  was declared but never referenced
-  	unsigned short i,j;
-HW_driver\SPI.c: 4 warnings, 0 errors
-compiling Temp.c...
-compiling IEEPROM.c...
 compiling uart.c...
-compiling IADC.c...
+compiling IEEPROM.c...
 compiling Timer.c...
 HW_driver\Timer.c(16): warning:  #9-D: nested comment is not allowed
   //**********************************************/
 HW_driver\Timer.c: 1 warning, 0 errors
+compiling IADC.c...
 linking...
-Program Size: Code=36680 RO-data=1000 RW-data=320 ZI-data=18640  
+Program Size: Code=36696 RO-data=1000 RW-data=332 ZI-data=18644  
 FromELF: creating hex file...
 After Build - User command #1: D:\Program Files\Keil_v5\\ARM\ARMCC\bin\fromelf.exe --bin --output=Output\Project.bin .\Output\Project.axf
-".\Output\Project.axf" - 0 Error(s), 35 Warning(s).
+".\Output\Project.axf" - 0 Error(s), 34 Warning(s).
 
 <h2>Software Packages used:</h2>
 

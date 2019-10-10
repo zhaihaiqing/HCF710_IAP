@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Output\Project.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Output\Project.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Sun Sep 29 17:23:24 2019
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Thu Oct 10 16:25:41 2019
 <BR><P>
 <H3>Maximum Stack Usage =        760 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -592,9 +592,9 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[159]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sqrt
 </UL>
 
-<P><STRONG><a name="[173]"></a>__decompress</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __dczerorl2.o(.text), UNUSED)
+<P><STRONG><a name="[173]"></a>__decompress</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __dczerorl.o(.text), UNUSED)
 
-<P><STRONG><a name="[174]"></a>__decompress1</STRONG> (Thumb, 86 bytes, Stack size unknown bytes, __dczerorl2.o(.text), UNUSED)
+<P><STRONG><a name="[174]"></a>__decompress0</STRONG> (Thumb, 58 bytes, Stack size unknown bytes, __dczerorl.o(.text), UNUSED)
 
 <P><STRONG><a name="[10b]"></a>OSStartHighRdy</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, os_cpu_a.o(CODE))
 <BR><BR>[Called By]<UL><LI><a href="#[10a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OSStart
@@ -638,8 +638,8 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[71]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AD779x_Calibrate
 </UL>
 
-<P><STRONG><a name="[7e]"></a>AD779x_Init</STRONG> (Thumb, 60 bytes, Stack size 16 bytes, spi.o(i.AD779x_Init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 132 + Unknown Stack Size
+<P><STRONG><a name="[7e]"></a>AD779x_Init</STRONG> (Thumb, 68 bytes, Stack size 8 bytes, spi.o(i.AD779x_Init))
+<BR><BR>[Stack]<UL><LI>Max Depth = 124 + Unknown Stack Size
 <LI>Call Chain = AD779x_Init &rArr; AD779x_Set &rArr; OSTimeDlyHMSM &rArr; OS_TickListInsert
 </UL>
 <BR>[Calls]<UL><LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AD779x_Reset
@@ -779,8 +779,6 @@ Global Symbols
 <LI><a href="#[98]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;FLASH_SetLatency
 <LI><a href="#[96]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;FLASH_ReadAccess64Cmd
 <LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;FLASH_PrefetchBufferCmd
-<LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_HSEConfig
-<LI><a href="#[9c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_HCLKConfig
 <LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_GetSYSCLKSource
 <LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_DeInit
 <LI><a href="#[9a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PWR_VoltageScalingConfig
@@ -790,6 +788,8 @@ Global Symbols
 <LI><a href="#[a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_PLLCmd
 <LI><a href="#[9d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_PCLK2Config
 <LI><a href="#[9e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_PCLK1Config
+<LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_HSEConfig
+<LI><a href="#[9c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_HCLKConfig
 <LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_IntInit
 </UL>
 <BR>[Called By]<UL><LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AppTaskStart
@@ -1535,15 +1535,14 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Instruction_Process_Subfunction
 </UL>
 
-<P><STRONG><a name="[8b]"></a>GPIO_Configuration</STRONG> (Thumb, 130 bytes, Stack size 16 bytes, gpio.o(i.GPIO_Configuration))
+<P><STRONG><a name="[8b]"></a>GPIO_Configuration</STRONG> (Thumb, 148 bytes, Stack size 16 bytes, gpio.o(i.GPIO_Configuration))
 <BR><BR>[Stack]<UL><LI>Max Depth = 36<LI>Call Chain = GPIO_Configuration &rArr; GPIO_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_AHBPeriphClockCmd
 <LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_Init
 <LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_SetBits
 </UL>
-<BR>[Called By]<UL><LI><a href="#[4a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TEMP_Task
-<LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AppTaskStart
+<BR>[Called By]<UL><LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AppTaskStart
 </UL>
 
 <P><STRONG><a name="[c9]"></a>GPIO_Init</STRONG> (Thumb, 132 bytes, Stack size 20 bytes, stm32l1xx_gpio.o(i.GPIO_Init))
@@ -2654,7 +2653,7 @@ Global Symbols
 <LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_TmrTask
 </UL>
 
-<P><STRONG><a name="[48]"></a>PAS_Task</STRONG> (Thumb, 88 bytes, Stack size 16 bytes, main.o(i.PAS_Task))
+<P><STRONG><a name="[48]"></a>PAS_Task</STRONG> (Thumb, 98 bytes, Stack size 16 bytes, main.o(i.PAS_Task))
 <BR><BR>[Stack]<UL><LI>Max Depth = 760 + Unknown Stack Size
 <LI>Call Chain = PAS_Task &rArr; Level_height_conversion &rArr; pow &rArr; __kernel_poly &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
@@ -2839,7 +2838,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPI1_Configuration
 </UL>
 
-<P><STRONG><a name="[4a]"></a>TEMP_Task</STRONG> (Thumb, 260 bytes, Stack size 32 bytes, main.o(i.TEMP_Task))
+<P><STRONG><a name="[4a]"></a>TEMP_Task</STRONG> (Thumb, 256 bytes, Stack size 32 bytes, main.o(i.TEMP_Task))
 <BR><BR>[Stack]<UL><LI>Max Depth = 168 + Unknown Stack Size
 <LI>Call Chain = TEMP_Task &rArr; DS18B20_TEMP &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
@@ -2847,7 +2846,6 @@ Global Symbols
 <LI><a href="#[147]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_cfrcmple
 <LI><a href="#[ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_cfcmple
 <LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OSTimeDlyHMSM
-<LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_Configuration
 <LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DS18B20_TEMP
 <LI><a href="#[ea]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr4
 </UL>
@@ -3082,7 +3080,7 @@ Global Symbols
 Local Symbols
 </H3>
 <P><STRONG><a name="[53]"></a>AppTaskStart</STRONG> (Thumb, 496 bytes, Stack size 40 bytes, main.o(i.AppTaskStart))
-<BR><BR>[Stack]<UL><LI>Max Depth = 172 + Unknown Stack Size
+<BR><BR>[Stack]<UL><LI>Max Depth = 164 + Unknown Stack Size
 <LI>Call Chain = AppTaskStart &rArr; AD779x_Init &rArr; AD779x_Set &rArr; OSTimeDlyHMSM &rArr; OS_TickListInsert
 </UL>
 <BR>[Calls]<UL><LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART1_Configuration

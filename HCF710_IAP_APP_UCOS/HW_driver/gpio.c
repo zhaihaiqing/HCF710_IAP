@@ -3,6 +3,7 @@
 
 void GPIO_Configuration(void)
 {
+	unsigned int i=0;
 	GPIO_InitTypeDef        GPIO_InitStructure;
 	//使能端口时钟
 	
@@ -33,6 +34,11 @@ void GPIO_Configuration(void)
 	GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_UP;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
 	GPIO_Init(GPIOB, &GPIO_InitStructure);
+	
+	for(i=0;i<0x3fff;i++)
+	{
+		__nop();
+	}
 	
 }
 

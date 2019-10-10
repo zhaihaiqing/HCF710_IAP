@@ -299,15 +299,16 @@ static  void  AppTaskStart (void *p_arg)
 	
 	UART1_Configuration(KeepRegister.bps);
 	SPI1_Configuration();
+	
 	AD779x_Init();
 	
 	
 	
-	log1_info("cpu_clk_freq:%dHz\r\n",cpu_clk_freq);
-	log1_info("NVIC_PriorityGroup_3\r\n");
-	log1_info("GPIO has Init!\r\n");
-	log1_info("UART has Init:%dbps!\r\n",COM_UART_bps);
-	log1_info("Hardware has Init!\r\n");
+	//log1_info("3 cpu_clk_freq:%dHz\r\n",cpu_clk_freq);
+	//log1_info("NVIC_PriorityGroup_3\r\n");
+	//log1_info("GPIO has Init!\r\n");
+	//log1_info("UART has Init:%dbps!\r\n",COM_UART_bps);
+	//log1_info("4Hardware has Init!\r\n");
 	
 	
 	OSTmrCreate((OS_TMR*  	)&tmr1,		//创建软件定时器tmr1
@@ -440,7 +441,7 @@ static  void  AppTaskStart (void *p_arg)
 	//log1_info("LOGINFO_Task has Create，prio:%d!\r\n",LOGINFO_TASK_PRIO);
 	//log1_info("TEMP_Task has Create，prio:%d!\r\n",TEMP_TASK_PRIO);
 	//log1_info("MAINPOWER_Task has Create，prio:%d!\r\n",MAINPOWER_TASK_PRIO);
-	log1_info("OS has Init!\r\n");
+	//log1_info("OS has Init!\r\n");
 		 
 	//OS_TaskSuspend((OS_TCB*)&AppTaskStartTCB,&err);		//挂起开始任务	
 	OS_CRITICAL_EXIT();	//临界区
@@ -511,9 +512,9 @@ void TEMP_Task(void *p_arg)
 	CPU_SR_ALLOC();
 	p_arg = p_arg;
 	
-	GPIO_Configuration();
+	//GPIO_Configuration();
 	
-	OSTimeDlyHMSM(0,0,2,0,OS_OPT_TIME_HMSM_STRICT,&err); //延时200ms
+	OSTimeDlyHMSM(0,0,1,0,OS_OPT_TIME_HMSM_STRICT,&err); //延时200ms
 	
 	//OSSchedLock(&err);//关闭任务调度
 	DS18B20_Temp=DS18B20_TEMP();
@@ -604,6 +605,8 @@ void MAINPOWER_Task(void *p_arg)
 * Output         : None
 * Return         : None
 *******************************************************************************/
+unsigned int test_count=0;
+unsigned char ad7799_ID=0,ad7799_status=0;
 void PAS_Task(void *p_arg)
 {
 	OS_ERR err;
@@ -612,6 +615,8 @@ void PAS_Task(void *p_arg)
 	
 	OSTimeDlyHMSM(0,0,2,0,OS_OPT_TIME_HMSM_STRICT,&err); //延时2000ms
 	OSTmrStart(&tmr1,&err);			//开启软件定时器tmr1
+	
+	log1_info("0 AD779x ID:0x%x,Status:0x%x\r\n",ad7799_ID,ad7799_status);
 	while(1)
 	{
 		AD779x_ContinuousReadData1(KeepRegister.Average_num);//
@@ -619,9 +624,11 @@ void PAS_Task(void *p_arg)
 		if(AD779x_Sampling_Complete_Flag1)
 		{
 			AD779x_Sampling_Complete_Flag1=0;
+			
 			Level_height_conversion(InputRegister.ADCOriginalValue,InputRegister.Temperature);
-		
-			//log1_info("Average_num:%d,mV:%fmV\r\n",KeepRegister.Average_num,InputRegister.ADCOriginalValue);
+			test_count++;
+			
+			log1_info("%d Average_num:%d,adc_mV=%fmV,temp=%f\r\n",test_count,KeepRegister.Average_num,InputRegister.ADCOriginalValue,InputRegister.Temperature);
 	
 			//log_info("Befor_AbsoluteValue:%fmm,Befor_DiffAltitude:%fmm\r\n",InputRegister.LiquidAltitudeAbsoluteValue_Befor,InputRegister.AltitudeDifference_Befor);
 			//log_info("After_AbsoluteValue:%fmm,After_DiffAltitude:%fmm\r\n",InputRegister.LiquidAltitudeAbsoluteValue_After,InputRegister.AltitudeDifference_After);

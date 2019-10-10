@@ -213,7 +213,7 @@ float DS18B20_TEMP(void)
 	
 	
 	temp=(b<<8) | a ;
-	log1_info("DS18B20_1:0x%x   ",temp);
+	//log1_info("DS18B20_1:0x%x   ",temp);
 	
 	
 	if(temp & 0xf800)
@@ -233,7 +233,7 @@ float DS18B20_TEMP(void)
 		//log_info("DS18B20_2:%.2f\r\n",result);
 	}
 
-	log1_info("DS18B20:%.2f\r\n",result);
+	//log1_info("DS18B20:%.2f\r\n",result);
 	return result;
 }
 

@@ -54,7 +54,7 @@ void SPI1_Configuration(void)
 	SPI_InitStructure.SPI_CPOL = SPI_CPOL_High;//串行同步时钟的空闲状态为高电平
 	SPI_InitStructure.SPI_CPHA = SPI_CPHA_2Edge;//串行同步时钟的第1个跳变沿（上升或下降）数据被采样
 	SPI_InitStructure.SPI_NSS = SPI_NSS_Soft;//NSS信号由硬件（NSS管脚）还是软件（使用SSI位）管理:内部NSS信号有SSI位控制
-	SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_16;//定义波特率预分频的值:波特率预分频值为2
+	SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_32;//定义波特率预分频的值:波特率预分频值为2
 	SPI_InitStructure.SPI_FirstBit = SPI_FirstBit_MSB;//指定数据传输从MSB位还是LSB位开始:数据传输从MSB位开始
 	SPI_InitStructure.SPI_CRCPolynomial = 7;	//CRC值计算的多项式
 	SPI_Init(SPI1, &SPI_InitStructure);  //根据SPI_InitStruct中指定的参数初始化外设SPIx寄存器
@@ -73,7 +73,7 @@ void SPI1_Mode_Configuration(unsigned short SPI1_CPOL,unsigned short SPI1_CPHA)
 	SPI_InitStructure.SPI_CPOL = SPI1_CPOL;//串行同步时钟的空闲状态为高电平
 	SPI_InitStructure.SPI_CPHA = SPI1_CPHA;//串行同步时钟的第1个跳变沿（上升或下降）数据被采样
 	SPI_InitStructure.SPI_NSS = SPI_NSS_Soft;//NSS信号由硬件（NSS管脚）还是软件（使用SSI位）管理:内部NSS信号有SSI位控制
-	SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_16;//定义波特率预分频的值:波特率预分频值为2
+	SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_32;//定义波特率预分频的值:波特率预分频值为2
 	SPI_InitStructure.SPI_FirstBit = SPI_FirstBit_MSB;//指定数据传输从MSB位还是LSB位开始:数据传输从MSB位开始
 	SPI_InitStructure.SPI_CRCPolynomial = 7;	//CRC值计算的多项式
 	SPI_Init(SPI1, &SPI_InitStructure);  //根据SPI_InitStruct中指定的参数初始化外设SPIx寄存器
@@ -285,27 +285,32 @@ unsigned int AD779x_Calibrate(void)
 *******************************************************************************/
 unsigned char AD779x_Init(void)
 {
-	unsigned char Status=0,ID=0;
+	//unsigned char Status=0,ID=0;
 	unsigned int buf;
+	
 	SPI1_CS_Select(AD779x);				//选择AD779x的片选信号
 	
+	__nop();__nop();__nop();__nop();
 	AD779x_Reset();								//复位AD779x
+	//__nop();__nop();__nop();__nop();
+	
 	
 	AD779x_Comm(AD779x_ID_REG,1,0);  //读寄存器操作
-	ID=SPI1_ReadWriteByte(0x00);  //读取
-	log_info("AD779x ID:0x%x\r\n",ID);
+	ad7799_ID=SPI1_ReadWriteByte(0x00);  //读取
 	//if((ID & 0x09) != 0x09)return 0;
 	
-	Status = AD779x_StatusRegisterRead();//获取AD779x状态寄存器内容
-	log_info("AD779x Status:0x%x\r\n",Status);
+	ad7799_status = AD779x_StatusRegisterRead();//获取AD779x状态寄存器内容
 	
 	buf=AD779x_ReadScale();
 	AD779x_Calibrate();				//对AD779x进行校准
-  
+
 	AD779x_Set(1);
 	
-	log_info("AD779x OK!\r\n");
-	return Status;
+	
+	//log1_info("1 AD779x ID:0x%x,Status:0x%x\r\n",ID,Status);
+	//log1_info("2 AD779x Status:0x%x\r\n",Status);
+	//log1_info("AD779x OK!\r\n");
+	return 0;
 }
 
 /*******************************************************************************
