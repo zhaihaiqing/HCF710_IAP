@@ -387,7 +387,7 @@ char ModbusWriteSingleRegistor(unsigned char RX_Len)
 数据格式:器件地址(1字节)+功能码(0x10)+寄存器地址(2字节)+寄存器数量(2字节)+字节数(1字节)+寄存器数值(N个数据)+校验(2字节)
 返回格式:器件地址(1字节)+功能码(0x10)+寄存器地址(2字节)+寄存器数量(2字节)+校验(2字节)
 *********************************/
-char ModbusWriteSomeRegistor(void)
+char ModbusWriteSomeRegistor(unsigned char RX_Len)
 {
 	uint8_t err=0;
 	uint8_t temp[10];
@@ -400,11 +400,18 @@ char ModbusWriteSomeRegistor(void)
 	uint8_t bytes = ModbusDataPackage.dat[6];											//获取字节数
 	uint16_t StopAddress = StartAddress + RegVal - 1;									//获取结束地址
 	uint16_t KeepRegistorSize = sizeof(KeepRegister) / 2;								//计算保持寄存器总数量
+	uint8_t rx_data_len=ModbusDataPackage.dat[6];
 	
 	//U485TX;Delay_ms(10);
 	
 	//printf("修正值:mm  修正后高度值:mm\r\n");
 	//Delay_ms(100);U485RX;Delay_ms(10);
+	
+	
+	
+	if(RX_Len != rx_data_len )err = err_OE;
+	
+	
 	
 	//参数合法检查
 	if(!RegVal || !bytes)err = err_add;													//寄存器地址不正确,读取数量必须大于1
@@ -986,7 +993,7 @@ void Instruction_Process_Subfunction(unsigned short RX_Len)
 						ResetSoftware(RX_Len);
 						break;
 			case WriteSomeRegistor:			//写多个保持寄存器
-						ModbusWriteSomeRegistor();
+						ModbusWriteSomeRegistor(RX_Len);
 						InputRegister.SystemWorkStatus=(InputRegister.SystemWorkStatus & 0xff00)|0x04;
 						//log_info("WriteSomeRegistor\r\n");
 						break;

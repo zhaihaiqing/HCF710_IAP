@@ -137,7 +137,7 @@ char ModbusReadKeepRegistor(unsigned char RX_Len);
 char ModbusSetInitalValue(unsigned char RX_Len);
 char ModbusSwitchMode(unsigned char RX_Len);
 char ModbusWriteSingleRegistor(unsigned char RX_Len);
-char ModbusWriteSomeRegistor(void);
+char ModbusWriteSomeRegistor(unsigned char RX_Len);
 void ModbusReturnAckInfo(uint8_t err);
 void Instruction_Process_Subfunction(unsigned short RX_Len);
 char ResetSoftware(unsigned short RX_Len);
