@@ -409,7 +409,7 @@ char ModbusWriteSomeRegistor(unsigned char RX_Len)
 	
 	
 	
-	if(RX_Len != rx_data_len )err = err_OE;
+	if(RX_Len != (rx_data_len+9) )err = err_OE;
 	
 	
 	
