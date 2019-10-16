@@ -297,7 +297,7 @@ char ModbusWriteSingleRegistor(unsigned char RX_Len)
 			EEWrite(KREEPROM_BASEADDR+2,(void *)&dat,2);//保存数据
 			break;
 		case 6:
-			if( ((dat == 0x14) || (dat == 0x64)) ==0 ){ModbusReturnAckInfo(3);	return ERROR;}
+			if( ((dat == 0x07) || (dat == 0x14) || (dat == 0x64)) ==0 ){ModbusReturnAckInfo(3);	return ERROR;}
 			KeepRegister.Sensor_Range = dat;
 			EEWrite(KREEPROM_BASEADDR+12,(void *)&dat,2);//保存数据
 			break;
@@ -504,6 +504,7 @@ char ModbusWriteSomeRegistor(unsigned char RX_Len)
 	if((KeepRegisterTemp.Average_num < 0) || (KeepRegisterTemp.Average_num > 256))		err = err_Re_VOR;
 	if((KeepRegisterTemp.bps< 0x01) || (KeepRegisterTemp.bps > 0x07))					err = err_Re_VOR;
 	if((KeepRegisterTemp.LocalAccelerationOfGravity< 9.78) || (KeepRegisterTemp.LocalAccelerationOfGravity > 10.0))err = err_Re_VOR;
+	if( (KeepRegisterTemp.Sensor_Range != 0x07) && (KeepRegisterTemp.Sensor_Range != 0x14) && (KeepRegisterTemp.Sensor_Range != 0x64)  )err = err_Re_VOR;
 	if(!err)																						//如果无错误,则将缓存的数据拷贝到寄存器中
 	{
 		memcpy((uint8_t *)&KeepRegister,(uint8_t *)&KeepRegisterTemp,sizeof(KeepRegister));
