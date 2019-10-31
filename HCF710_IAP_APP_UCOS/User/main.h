@@ -80,7 +80,7 @@
 #define SUCCESS			            	1		   		//成功
 
 #define DEVICETYPE					  	0x02c6	   //HCF710设备类型,将十进制710转换为十六进制
-#define SOFTWAREVERSION			  		0x0402     //软件版本号定义规则：版本号共三位表示，例如1.2.3，表示方法为：高八位表示1，低八位表示23,其中低八位最大表示99
+#define SOFTWAREVERSION			  		0x0400     //软件版本号定义规则：版本号共三位表示，例如1.2.3，表示方法为：高八位表示1，低八位表示23,其中低八位最大表示99
 
 #define DefaultDeviceADDR			  	0x01	   	//默认器件地址
 #define DefaultLiquidDensity		  	1.0	   		//默认液体密度

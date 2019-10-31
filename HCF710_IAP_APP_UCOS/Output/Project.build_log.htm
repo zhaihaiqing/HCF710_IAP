@@ -27,12 +27,11 @@ Project File Date:  10/10/2019
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'D:\Program Files\Keil_v5\ARM\ARMCC\Bin'
 Build target 'STM32L1xx'
-compiling Temp.c...
 compiling gpio.c...
-compiling PAS.c...
-User\PAS.c(179): warning:  #177-D: variable "LD_V"  was declared but never referenced
-  	double LD_V[4]={0};
-User\PAS.c: 1 warning, 0 errors
+compiling stm32l1xx_it.c...
+User\stm32l1xx_it.c(185): warning:  #550-D: variable "tmp"  was set but never used
+  	unsigned char 	Uart_Get_Data,tmp;	//串口1接收的数据
+User\stm32l1xx_it.c: 1 warning, 0 errors
 compiling SPI.c...
 HW_driver\SPI.c(289): warning:  #550-D: variable "buf"  was set but never used
   	unsigned int buf;
@@ -41,10 +40,27 @@ HW_driver\SPI.c(400): warning:  #177-D: variable "i"  was declared but never ref
 HW_driver\SPI.c(400): warning:  #177-D: variable "j"  was declared but never referenced
   	unsigned short i,j;
 HW_driver\SPI.c: 3 warnings, 0 errors
-compiling stm32l1xx_it.c...
-User\stm32l1xx_it.c(185): warning:  #550-D: variable "tmp"  was set but never used
-  	unsigned char 	Uart_Get_Data,tmp;	//串口1接收的数据
-User\stm32l1xx_it.c: 1 warning, 0 errors
+compiling main.c...
+User\main.c(204): warning:  #186-D: pointless comparison of unsigned integer with zero
+  	if((KeepRegister.Average_num<0)||(KeepRegister.Average_num>256))KeepRegister.Average_num=3;
+User\main.c(508): warning:  #177-D: variable "i"  was declared but never referenced
+  	unsigned char i=0;
+User\main.c(509): warning:  #177-D: variable "temp"  was declared but never referenced
+  	float temp[5]={0},buff=0;
+User\main.c(509): warning:  #177-D: variable "buff"  was declared but never referenced
+  	float temp[5]={0},buff=0;
+User\main.c(510): warning:  #177-D: variable "ADT7301_Temp"  was declared but never referenced
+  	float ADT7301_Temp,DS18B20_Temp,ABStemp;
+User\main.c(512): warning:  #177-D: variable "cpu_sr"  was declared but never referenced
+  	CPU_SR_ALLOC();
+User\main.c(14): warning:  #177-D: variable "AppSw"  was declared but never referenced
+  static  CPU_BOOLEAN     AppSw;
+User\main.c: 7 warnings, 0 errors
+compiling Temp.c...
+compiling PAS.c...
+User\PAS.c(179): warning:  #177-D: variable "LD_V"  was declared but never referenced
+  	double LD_V[4]={0};
+User\PAS.c: 1 warning, 0 errors
 compiling Modbus.c...
 User\Modbus.c(311): warning:  #186-D: pointless comparison of unsigned integer with zero
   			if(  (dat < 0x00) || (dat >256)  ){ModbusReturnAckInfo(3);	return ERROR;}   //如果不等于特定值，返回错误
@@ -89,29 +105,13 @@ User\Modbus.c(966): warning:  #111-D: statement is unreachable
 User\Modbus.c(940): warning:  #177-D: variable "OriginaAltitudeTemp"  was declared but never referenced
   	float OriginaAltitudeTemp=0;
 User\Modbus.c: 21 warnings, 0 errors
-compiling main.c...
-User\main.c(204): warning:  #186-D: pointless comparison of unsigned integer with zero
-  	if((KeepRegister.Average_num<0)||(KeepRegister.Average_num>256))KeepRegister.Average_num=3;
-User\main.c(508): warning:  #177-D: variable "i"  was declared but never referenced
-  	unsigned char i=0;
-User\main.c(509): warning:  #177-D: variable "temp"  was declared but never referenced
-  	float temp[5]={0},buff=0;
-User\main.c(509): warning:  #177-D: variable "buff"  was declared but never referenced
-  	float temp[5]={0},buff=0;
-User\main.c(510): warning:  #177-D: variable "ADT7301_Temp"  was declared but never referenced
-  	float ADT7301_Temp,DS18B20_Temp,ABStemp;
-User\main.c(512): warning:  #177-D: variable "cpu_sr"  was declared but never referenced
-  	CPU_SR_ALLOC();
-User\main.c(14): warning:  #177-D: variable "AppSw"  was declared but never referenced
-  static  CPU_BOOLEAN     AppSw;
-User\main.c: 7 warnings, 0 errors
+compiling uart.c...
+compiling IEEPROM.c...
+compiling IADC.c...
 compiling Timer.c...
 HW_driver\Timer.c(16): warning:  #9-D: nested comment is not allowed
   //**********************************************/
 HW_driver\Timer.c: 1 warning, 0 errors
-compiling IEEPROM.c...
-compiling uart.c...
-compiling IADC.c...
 linking...
 Program Size: Code=36748 RO-data=996 RW-data=332 ZI-data=18644  
 FromELF: creating hex file...
@@ -130,7 +130,7 @@ Package Vendor: Keil
   D:\Program Files\Keil_v5\ARM\PACK\Keil\STM32L1xx_DFP\1.2.0\Device\Include
 
 <h2>Collection of Component Files used:</h2>
-Build Time Elapsed:  00:00:05
+Build Time Elapsed:  00:00:04
 </pre>
 </body>
 </html>
