@@ -86,7 +86,7 @@
 #define DefaultLiquidDensity		  	1.0	   		//默认液体密度
 #define DefaultAltitude				  	0.0	  		//默认初始高度
 #define DefaultAccelerationOfGravity  	9.8015   //默认当地重力加速度（北京）
-#define DefaultSensor_Range			  	20       //默认传感器量程为20KPa
+#define DefaultSensor_Range			  	7       //默认传感器量程为20KPa
 
 #define Liquid_Water					0x01     //liquid selecet code
 #define Liquid_FD01_25					0x02
