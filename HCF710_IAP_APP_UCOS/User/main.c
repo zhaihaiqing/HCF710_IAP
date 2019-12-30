@@ -645,11 +645,8 @@ void CLCWDT_Task(void *p_arg)
 	
 	while(1)
 	{
-		OSTimeDlyHMSM(0,0,0,750,OS_OPT_TIME_HMSM_STRICT,&err); //—” ±1000ms
+		OSTimeDlyHMSM(0,0,0,75,OS_OPT_TIME_HMSM_STRICT,&err); //—” ±1000ms
 		GPIO_PinReverse(GPIOA,GPIO_Pin_1);
-		
-		
-		
 	}
 }
 
