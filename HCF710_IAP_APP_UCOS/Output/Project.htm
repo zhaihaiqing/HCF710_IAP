@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Output\Project.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Output\Project.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Mon Dec 30 13:21:30 2019
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Mon Mar 09 09:42:20 2020
 <BR><P>
 <H3>Maximum Stack Usage =        760 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -1562,7 +1562,8 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[ac]"></a>GPIO_PinReverse</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, gpio.o(i.GPIO_PinReverse))
-<BR><BR>[Called By]<UL><LI><a href="#[8c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Init_Parameter
+<BR><BR>[Called By]<UL><LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ModbusWriteSomeRegistor
+<LI><a href="#[8c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Init_Parameter
 <LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CLCWDT_Task
 </UL>
 
@@ -1853,7 +1854,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Instruction_Process_Subfunction
 </UL>
 
-<P><STRONG><a name="[e1]"></a>ModbusWriteSomeRegistor</STRONG> (Thumb, 1804 bytes, Stack size 64 bytes, modbus.o(i.ModbusWriteSomeRegistor))
+<P><STRONG><a name="[e1]"></a>ModbusWriteSomeRegistor</STRONG> (Thumb, 1872 bytes, Stack size 64 bytes, modbus.o(i.ModbusWriteSomeRegistor))
 <BR><BR>[Stack]<UL><LI>Max Depth = 144 + Unknown Stack Size
 <LI>Call Chain = ModbusWriteSomeRegistor &rArr; ModbusReturnAckInfo &rArr; U485SendData &rArr; USART_PutData &rArr; USART_PutChar
 </UL>
@@ -1863,6 +1864,7 @@ Global Symbols
 <LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;U485SendData
 <LI><a href="#[b5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ModbusReturnAckInfo
 <LI><a href="#[db]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__ltobf
+<LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_PinReverse
 <LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EEWrite
 <LI><a href="#[b7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CRC16_Check
 <LI><a href="#[f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy

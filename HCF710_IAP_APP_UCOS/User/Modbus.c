@@ -508,18 +508,18 @@ char ModbusWriteSomeRegistor(unsigned char RX_Len)
 	if(!err)																						//如果无错误,则将缓存的数据拷贝到寄存器中
 	{
 		memcpy((uint8_t *)&KeepRegister,(uint8_t *)&KeepRegisterTemp,sizeof(KeepRegister));
-		EEWrite(KREEPROM_BASEADDR,(void *)&KeepRegisterTemp,sizeof(KeepRegister));					//保存数据，更新整个寄存器组
+		//EEWrite(KREEPROM_BASEADDR,(void *)&KeepRegisterTemp,sizeof(KeepRegister));					//保存数据，更新整个寄存器组
+		EEWrite(KREEPROM_BASEADDR,(void *)&KeepRegister.DeviceAddress,24);//更新EEPROM
+		GPIO_PinReverse(GPIOA,GPIO_Pin_1);
 		
-//		EEWrite(KREEPROM_BASEADDR,(void *)&KeepRegister.DeviceAddress,24);//更新EEPROM
-//		GPIO_PinReverse(GPIOA,GPIO_Pin_1);
-//		EEWrite(KREEPROM_BASEADDR+24,(void *)&KeepRegister.MV[0],28);
-//		GPIO_PinReverse(GPIOA,GPIO_Pin_1);
-//	
-//		EEWrite(KREEPROM_BASEADDR+52,(void *)&KeepRegister.LTC0[0],120);
-//		GPIO_PinReverse(GPIOA,GPIO_Pin_1);
-//		
-//		EEWrite(KREEPROM_BASEADDR+172,(void *)&KeepRegister.Average_num,4);//保存数据
-//		GPIO_PinReverse(GPIOA,GPIO_Pin_1);
+		EEWrite(KREEPROM_BASEADDR+24,(void *)&KeepRegister.MV[0],28);
+		GPIO_PinReverse(GPIOA,GPIO_Pin_1);
+		
+		EEWrite(KREEPROM_BASEADDR+52,(void *)&KeepRegister.LTC0[0],120);
+		GPIO_PinReverse(GPIOA,GPIO_Pin_1);
+		
+		EEWrite(KREEPROM_BASEADDR+172,(void *)&KeepRegister.Average_num,4);//保存数据
+		GPIO_PinReverse(GPIOA,GPIO_Pin_1);
 
 	}
 	else if(ModbusDataPackage.dat[0])//如果数据范围错误
