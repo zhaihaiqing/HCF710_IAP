@@ -51,7 +51,7 @@
 //#define debug
 #ifdef  debug
 		//#define log_info(...)             printf(__VA_ARGS__);
-		 #define log_info(...)          GPIO_SetBits(GPIOA,GPIO_Pin_4);printf(__VA_ARGS__);GPIO_ResetBits(GPIOA,GPIO_Pin_4)
+		 #define log_info(...)          printf(__VA_ARGS__)
 #else
 		#define log_info(...)
 #endif
@@ -68,7 +68,7 @@
 #define SUCCESS			            	    1		   //成功
 
 #define DEVICETYPE					        0x02c6	   //HCF1100设备类型,将十进制1100转换为十六进制
-#define SOFTWAREVERSION			        	0x0400     //软件版本号定义规则：版本号共三位表示，例如1.2.3，表示方法为：高八位表示1，低八位表示23,其中低八位最大表示99
+#define SOFTWAREVERSION			        	0x0401     //软件版本号定义规则：版本号共三位表示，例如1.2.3，表示方法为：高八位表示1，低八位表示23,其中低八位最大表示99
 
 #define DefaultDeviceADDR			        0x01	   
 	   

@@ -246,14 +246,15 @@ unsigned char Update_Firmware(void)
 	
 				log_info("App Info-Program_Version:0x%x ,Program_Size:%d,Totle_Frame:%d\r\n",BL_Data.Program_Version,BL_Data.Program_Size,BL_Data.Totle_Frame);
 	
-				log_info("CPU Erage Flash Now . . .\r\n");
-				BL_Data.End_sector=BL_Data.Program_Size/4 + BL_Data.Start_sector;	//计算APP程序最后一位所在扇区号
+				BL_Data.End_sector=BL_Data.Program_Size/4096 + BL_Data.Start_sector+1;	//计算APP程序最后一位所在扇区号
+				if(BL_Data.End_sector>31)BL_Data.End_sector=31;
+				log_info("CPU Erage Flash Now . . .Start_sector:%d,End_sector:%d\r\n",BL_Data.Start_sector,BL_Data.End_sector);
 				for(i=BL_Data.Start_sector;i<=BL_Data.End_sector;i++)				//循环擦除APP程序将要占用的扇区
 					for(j=BL_Data.Start_Page;j<=FLASH_PAGE_NUM_EACH_SECTOR;j++)
 						FLASH_Page_Erase(i,j);										//擦除Flash
 				log_info("Flash  Erage  OK . . .\r\n");
-				log_info("Program_Version:%d.%d.%d Program_Size:%dKb Totle_Frame:%d\r\n",(BL_Data.Program_Version&0xff00)>>8,\
-						(BL_Data.Program_Version&0xff)/10,(BL_Data.Program_Version&0xff)%10,BL_Data.Program_Size,BL_Data.Totle_Frame);
+				log_info("Program_Version:%d.%d.%d Program_Size:%d Totle_Frame:%d\r\n",(BL_Data.Program_Version&0xff00)>>8,\
+						(BL_Data.Program_Version&0xff)/10,(BL_Data.Program_Version&0xff)%10,BL_Data.Program_Size,BL_Data.Totle_Frame);				
 				
 				tem[0]=BL_Data.DeviceAddress;
 				tem[1]=0xA6;
@@ -266,6 +267,7 @@ unsigned char Update_Firmware(void)
 				tem[7] = (M_crc >> 8);	//校验高8位
 				U485SendData(tem,8);	//向485发送数据
 				
+				//while(1);
 				//log_info("SysTick_Count:%d\r\n",SysTick_Count);
 				break;
 			}

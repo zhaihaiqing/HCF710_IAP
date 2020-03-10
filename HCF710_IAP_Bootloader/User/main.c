@@ -56,7 +56,9 @@ void Init_Hardware(void)
 	Init_SysTick();//开启SysTick定时器
 	GPIO_Configuration();
 	UART1_Configuration(9600);
-
+#ifdef  debug
+	UART3_Configuration(115200);
+#endif
 	log_info("Run in BootLoader,Hardware has init!\r\n");
 	
 	RS485_RX();
@@ -109,13 +111,33 @@ void Init_Parameter(void)
 * Return         : None
 *******************************************************************************/
 int main(void)
-{		
+{	
+uint32_t i=0,j=0;	
 	RCC_GetClocksFreq(&RCC_Clocks1);
 	Init_Hardware();	//完成硬件驱动初始化
 	Init_Parameter();	//完成参数初始化
 	
 	while(1)
 	{
+		
+//		Delay(75);
+//		log_info("start erase\r\n");
+//		for(i=8;i<=31;i++)				//循环擦除APP程序将要占用的扇区
+//			for(j=0;j<=FLASH_PAGE_NUM_EACH_SECTOR;j++)
+//				{
+//					FLASH_Page_Erase(i,j);
+//					//log_info("i=%d,j=%d",i,j);
+//				}
+//		log_info("end erase\r\n");
+//		while(1)
+//			{
+//				ClC_WatchDogTask();	//等待MT消息
+//				Delay(50);
+//			};		
+//		
+		
+		
+		
 		//如果已升级完成标志位==0x08080808，直接跳转至APP程序
 		if( Update_Firmware_Flag == 0x08080808 )
 		{

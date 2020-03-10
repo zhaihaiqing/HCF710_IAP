@@ -73,6 +73,57 @@ void UART1_Configuration(unsigned int baudrate)
 	
 }
 
+#ifdef  debug
+void UART3_Configuration(unsigned int baudrate)
+{
+	USART_InitTypeDef USART_InitStructure;
+	GPIO_InitTypeDef GPIO_InitStructure;
+	NVIC_InitTypeDef NVIC_InitStructure;
+	
+	/* Enable the USART1 Interrupt */
+//	NVIC_InitStructure.NVIC_IRQChannel = USART3_IRQn;
+//	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
+//	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
+//	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+//	NVIC_Init(&NVIC_InitStructure);
+	
+	//打开GPIO和USART1的时钟
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3,ENABLE);  //使能串口1时钟
+	
+	GPIO_PinAFConfig(GPIOB,GPIO_PinSource10,GPIO_AF_USART3);//端口重映射
+	//GPIO_PinAFConfig(GPIOB,GPIO_PinSource11,GPIO_AF_USART3);
+	
+	/* 将USART1_Tx的GPIO配置为推挽复用模式 */
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;     
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_40MHz;
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+	GPIO_Init(GPIOB, &GPIO_InitStructure);
+	/*  将USART1_Rx的GPIO配置为浮空输入模式
+  	由于CPU复位后，GPIO缺省都是浮空输入模式，因此下面这个步骤不是必须的
+  	但是，我还是建议加上便于阅读，并且防止其它地方修改了这个口线的设置参数 */
+//	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11;		//GPIO_Pin_7
+//	GPIO_Init(GPIOB, &GPIO_InitStructure);
+	
+	USART_InitStructure.USART_BaudRate = baudrate;//设置波特率
+	USART_InitStructure.USART_WordLength = USART_WordLength_8b;//设置数据位为8
+	USART_InitStructure.USART_StopBits = USART_StopBits_1;//设置停止位为1
+	USART_InitStructure.USART_Parity = USART_Parity_No;//无奇偶校验
+	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;//无硬件流控位
+	USART_InitStructure.USART_Mode =   USART_Mode_Tx;//发送和接收
+	USART_Init(USART3, &USART_InitStructure);
+	
+	//中断使能
+//	USART_ITConfig(USART3, USART_IT_RXNE, ENABLE);
+//	USART_ITConfig(USART3, USART_IT_IDLE, ENABLE);
+//	USART_ClearFlag(USART3, USART_FLAG_TC);     /* 清发送标志，Transmission Complete flag */
+	
+	//使能
+	USART_Cmd(USART3, ENABLE);
+	
+}
+#endif
 /**********************************************************************************
 * Function Name  : USART_PutChar
 * 串口发送一个字符
@@ -141,7 +192,7 @@ printf功能定义，(括号中表示从哪个串口输出数据及数据类型)
 **********************************************************************************/
 PUTCHAR_PROTOTYPE
 {
-	USART_PutChar(USART1,(uint8_t) ch);
+	USART_PutChar(USART3,(uint8_t) ch);
 	return ch;
 }
 

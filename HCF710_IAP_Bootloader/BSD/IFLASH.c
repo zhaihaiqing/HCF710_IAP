@@ -2,7 +2,7 @@
 
 /*****************************************************
 * 【解锁Flash】     向Flash秘钥寄存器FLASH_KEYR中写入KEY1 = 0x45670123
-* 						      再向Flash秘钥寄存器FLASH_KEYR中写入KEY2 = 0xCDEF89AB
+* 					再向Flash秘钥寄存器FLASH_KEYR中写入KEY2 = 0xCDEF89AB
 * 【数据操作位数】
 * 【擦除扇区】
 * 【写入数据】
@@ -135,14 +135,14 @@ unsigned int FLASH_If_Erase(uint32_t StartAddr)
 unsigned int FLASH_Page_Erase(uint16_t sector,uint16_t Page)
 {
   uint32_t flashaddress;
-	if(sector<8 || sector>31 || Page>15 )return 1;
+  if(sector<8 || sector>31 || Page>15 )return 1;
 	
   flashaddress = FLASH_START_ADDRESS+sector*FLASH_SECTOR_SIZE+Page*FLASH_PAGE_SIZE;
-	SystemDisableIRQ();
-	FLASH_If_Init();
+  SystemDisableIRQ();
+  FLASH_If_Init();
   FLASH_ErasePage(flashaddress);
-	FLASH_Lock();
-	SystemEnableIRQ();
+  FLASH_Lock();
+  SystemEnableIRQ();
   
   return (0);
 }

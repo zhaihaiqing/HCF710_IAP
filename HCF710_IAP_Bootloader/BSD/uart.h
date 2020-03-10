@@ -42,6 +42,8 @@ void USART1_ClearBuf_Flag(void);
 void U485SendData(unsigned char *dat,unsigned short len);
 void U485_2SendData(unsigned char *dat,unsigned short len);
 
+void UART3_Configuration(unsigned int baudrate);
+
 
 #endif
 
