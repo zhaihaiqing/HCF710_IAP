@@ -50,10 +50,10 @@
 
 //定义log_info
 //#define debug
-//#define debug2
+//#define debug
 
 #ifdef debug
-		 #define log_info(...)    	GPIO_SetBits(GPIOB,GPIO_Pin_5); printf(__VA_ARGS__);GPIO_ResetBits(GPIOB,GPIO_Pin_5);
+		 #define log_info(...)    	 printf(__VA_ARGS__)
 #else
 		#define log_info(...)
 #endif
@@ -62,7 +62,7 @@
 
 
 #ifdef debug2
-		 #define log1_info(...)     GPIO_SetBits(GPIOB,GPIO_Pin_5); printf(__VA_ARGS__);GPIO_ResetBits(GPIOB,GPIO_Pin_5);
+		 #define log1_info(...)      printf(__VA_ARGS__)
 #else
 		#define log1_info(...)
 #endif
@@ -80,13 +80,13 @@
 #define SUCCESS			            	1		   		//成功
 
 #define DEVICETYPE					  	0x02c6	   //HCF710设备类型,将十进制710转换为十六进制
-#define SOFTWAREVERSION			  		0x0401     //软件版本号定义规则：版本号共三位表示，例如1.2.3，表示方法为：高八位表示1，低八位表示23,其中低八位最大表示99
+#define SOFTWAREVERSION			  		0x0403     //软件版本号定义规则：版本号共三位表示，例如1.2.3，表示方法为：高八位表示1，低八位表示23,其中低八位最大表示99
 
 #define DefaultDeviceADDR			  	0x01	   	//默认器件地址
 #define DefaultLiquidDensity		  	1.0	   		//默认液体密度
 #define DefaultAltitude				  	0.0	  		//默认初始高度
 #define DefaultAccelerationOfGravity  	9.8015   //默认当地重力加速度（北京）
-#define DefaultSensor_Range			  	7       //默认传感器量程为20KPa
+#define DefaultSensor_Range			  	20       //默认传感器量程为20KPa
 
 #define Liquid_Water					0x01     //liquid selecet code
 #define Liquid_FD01_25					0x02
@@ -106,11 +106,17 @@
 #define LED1_OFF()    	 GPIOB->BSRRL = GPIO_Pin_8//
 #define LED1_COM()		 GPIOB->ODR ^= GPIO_Pin_8;
 
-#define RS485_RX()    	 GPIO_ResetBits(GPIOB,GPIO_Pin_5)
-#define RS485_TX()    	 GPIO_SetBits(GPIOB,GPIO_Pin_5)
+#define RS485_RX()    	 GPIOB->BSRRH = GPIO_Pin_5
+#define RS485_TX()    	 GPIOB->BSRRL = GPIO_Pin_5
 
-#define SenPower_ON()    GPIO_SetBits(GPIOA,GPIO_Pin_3)
-#define SenPower_OFF()   GPIO_ResetBits(GPIOA,GPIO_Pin_3)
+#define SenPower_ON()    GPIOA->BSRRL = GPIO_Pin_3
+#define SenPower_OFF()   GPIOA->BSRRH = GPIO_Pin_3
+
+//#define RS485_RX()    	 GPIO_ResetBits(GPIOB,GPIO_Pin_5)
+//#define RS485_TX()    	 GPIO_SetBits(GPIOB,GPIO_Pin_5)
+
+//#define SenPower_ON()    GPIO_SetBits(GPIOA,GPIO_Pin_3)
+//#define SenPower_OFF()   GPIO_ResetBits(GPIOA,GPIO_Pin_3)
 
 
 typedef struct __attribute__ ((__packed__))

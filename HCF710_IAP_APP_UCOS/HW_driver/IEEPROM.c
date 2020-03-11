@@ -81,6 +81,7 @@ void EEWrite(unsigned short addr, unsigned char *pbuff,unsigned short length)
 	while(length--)
 	{
 		OS_CRITICAL_ENTER();
+		GPIO_PinReverse(GPIOA,GPIO_Pin_1);
 		DATA_EEPROM_ProgramByte(waddr++,*pbuff++); 
 		OS_CRITICAL_EXIT();
 	}

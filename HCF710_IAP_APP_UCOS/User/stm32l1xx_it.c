@@ -192,12 +192,17 @@ void	BSP_IntHandlerUSART1(void)
     CPU_CRITICAL_EXIT();
 	
 	LED1_ON();
-	if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)
+	//if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)
+	if((USART1->SR & 0x20) != RESET)
 	{
 		//Modbus_BusyFlag=1;
 		//Modbus_FreeFlag=1;
+		
 		Uart_Get_Data = USART_ReceiveData(USART1);
-		USART_ClearITPendingBit(USART1,USART_IT_RXNE);
+		
+		USART1->SR &= 0x3DF ;
+		
+		//USART_ClearITPendingBit(USART1,USART_IT_RXNE);
 		if(!ModbusDataPackage.DataFlag)
 		{
 			//如果缓存为空,表示第一个数据,或者未达到接收时间间隔，判定为继续接收
@@ -259,57 +264,57 @@ void	BSP_IntHandlerUSART1(void)
 //}
 
 
-void USART2_IRQHandler(void)
-{
-	unsigned char 	Uart_Get_Data;	//串口2接收的数据
-	UART2_RBUF_ST *p = &uart2_rbuf;
-	if(USART_GetITStatus(USART2, USART_IT_RXNE) != RESET)
-	{
-		Uart_Get_Data = USART_ReceiveData(USART2);
-		USART_ClearITPendingBit(USART2,USART_IT_RXNE);
-		if(!Uart1Flag)
-		{
-			if((((p->out - p->in) & (UART2_RBUF_SIZE - 1)) == 0) || USART2_INTERVAL_TIME)
-			{
-				USART2_INTERVAL_TIME=Default_USART2_INTERVAL_TIME;
-				if((p->in - p->out)<UART2_RBUF_SIZE)
-				{
-					p->buf [p->in & (UART2_RBUF_SIZE-1)] = Uart_Get_Data;	
-					p->in++;
-				}
-				USART2_RX_Len  = (p->in - p->out) & (UART2_RBUF_SIZE - 1);//获取数据长度
-			}
-			
-		}
-	}
-}
+//void USART2_IRQHandler(void)
+//{
+//	unsigned char 	Uart_Get_Data;	//串口2接收的数据
+//	UART2_RBUF_ST *p = &uart2_rbuf;
+//	if(USART_GetITStatus(USART2, USART_IT_RXNE) != RESET)
+//	{
+//		Uart_Get_Data = USART_ReceiveData(USART2);
+//		USART_ClearITPendingBit(USART2,USART_IT_RXNE);
+//		if(!Uart1Flag)
+//		{
+//			if((((p->out - p->in) & (UART2_RBUF_SIZE - 1)) == 0) || USART2_INTERVAL_TIME)
+//			{
+//				USART2_INTERVAL_TIME=Default_USART2_INTERVAL_TIME;
+//				if((p->in - p->out)<UART2_RBUF_SIZE)
+//				{
+//					p->buf [p->in & (UART2_RBUF_SIZE-1)] = Uart_Get_Data;	
+//					p->in++;
+//				}
+//				USART2_RX_Len  = (p->in - p->out) & (UART2_RBUF_SIZE - 1);//获取数据长度
+//			}
+//			
+//		}
+//	}
+//}
 
 
 
-void USART3_IRQHandler(void)
-{
-	unsigned char 	Uart_Get_Data;	//串口2接收的数据
-	UART3_RBUF_ST *p = &uart3_rbuf;
-	if(USART_GetITStatus(USART3, USART_IT_RXNE) != RESET)
-	{
-		Uart_Get_Data = USART_ReceiveData(USART3);
-		USART_ClearITPendingBit(USART3,USART_IT_RXNE);
-		if(!Uart3Flag)
-		{
-			if((((p->out - p->in) & (UART3_RBUF_SIZE - 1)) == 0) || USART3_INTERVAL_TIME)
-			{
-				USART3_INTERVAL_TIME=Default_USART3_INTERVAL_TIME;
-				if((p->in - p->out)<UART3_RBUF_SIZE)
-				{
-					p->buf [p->in & (UART3_RBUF_SIZE-1)] = Uart_Get_Data;	
-					p->in++;
-				}
-				USART3_RX_Len  = (p->in - p->out) & (UART3_RBUF_SIZE - 1);//获取数据长度
-			}
-			
-		}
-	}
-}
+//void USART3_IRQHandler(void)
+//{
+//	unsigned char 	Uart_Get_Data;	//串口2接收的数据
+//	UART3_RBUF_ST *p = &uart3_rbuf;
+//	if(USART_GetITStatus(USART3, USART_IT_RXNE) != RESET)
+//	{
+//		Uart_Get_Data = USART_ReceiveData(USART3);
+//		USART_ClearITPendingBit(USART3,USART_IT_RXNE);
+//		if(!Uart3Flag)
+//		{
+//			if((((p->out - p->in) & (UART3_RBUF_SIZE - 1)) == 0) || USART3_INTERVAL_TIME)
+//			{
+//				USART3_INTERVAL_TIME=Default_USART3_INTERVAL_TIME;
+//				if((p->in - p->out)<UART3_RBUF_SIZE)
+//				{
+//					p->buf [p->in & (UART3_RBUF_SIZE-1)] = Uart_Get_Data;	
+//					p->in++;
+//				}
+//				USART3_RX_Len  = (p->in - p->out) & (UART3_RBUF_SIZE - 1);//获取数据长度
+//			}
+//			
+//		}
+//	}
+//}
 
 
 void I2C1_EV_IRQHandler(void)

@@ -410,7 +410,7 @@ void AD779x_ContinuousReadData1(unsigned short Average_num)
 	
 	if(!AD779x_RDY)
 	{
-		OS_CRITICAL_ENTER();	//进入临界区
+		//OS_CRITICAL_ENTER();	//进入临界区
 		
 		AD779x_RequestData(0);
 		val = SPI1_ReadWriteByte(0);
@@ -419,7 +419,7 @@ void AD779x_ContinuousReadData1(unsigned short Average_num)
 		val <<= 8;
 		val |= SPI1_ReadWriteByte(0);
 		
-		OS_CRITICAL_EXIT();	//进入临界区
+		//OS_CRITICAL_EXIT();	//进入临界区
 		AD_CS_H();
 		
 		ADC_VAL += ((int)val - 0x800000);

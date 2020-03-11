@@ -323,47 +323,6 @@ char ModbusWriteSingleRegistor(unsigned char RX_Len)
 			break;	
 	}			
 	
-//	if(StartAddress == 0)							//如果写设备地址数据
-//	{
-//		if((dat == 0) || (dat > 247)){ModbusReturnAckInfo(3);	return ERROR;}	//地址数据超出范围,返回异常功能码,寄存器值超出范围
-//		KeepRegister.DeviceAddress = dat;
-//		EEWrite(KREEPROM_BASEADDR,(void *)&dat,2);//保存数据
-//	}
-//	
-//	if(StartAddress == 1)							//如果写设备组号
-//	{	
-//		KeepRegister.DeviceGroupNum = dat;
-//		EEWrite(KREEPROM_BASEADDR+2,(void *)&dat,2);//保存数据
-//	}
-//	
-//	if(StartAddress == 6)							//如果写传感器量程
-//	{
-//		if( ((dat == 0x14) || (dat == 0x64)) ==0 ){ModbusReturnAckInfo(3);	return ERROR;}
-//		KeepRegister.Sensor_Range = dat;
-//		EEWrite(KREEPROM_BASEADDR+12,(void *)&dat,2);//保存数据
-//	}
-//	
-//	if(StartAddress == 7)							//如果
-//	{
-//		if( ( ((dat >>8) == 0x01) || ((dat >>8) == 0x02) || ((dat >>8) ==0x03) || ((dat >>8) ==0x04) || ((dat >>8)==0x05) ) ==0  ){ModbusReturnAckInfo(3);	return ERROR;}   //如果不等于特定值，返回错误
-//		//if( ( ((dat & 0x00FF)==0x00) || ((dat & 0x00FF)==0x01))  ==0  ){ModbusReturnAckInfo(4);	return ERROR;}
-//		KeepRegister.Liquid_Sec = dat;
-//		EEWrite(KREEPROM_BASEADDR+14,(void *)&dat,2);//保存数据
-//	}
-//	
-//	if(StartAddress == 0x56)							//平均次数
-//	{
-//		if(  (dat < 0x00) || (dat >256)  ){ModbusReturnAckInfo(3);	return ERROR;}   //如果不等于特定值，返回错误
-//		KeepRegister.Average_num = dat;
-//		EEWrite(KREEPROM_BASEADDR+172,(void *)&dat,2);//保存数据
-//	}
-//	if(StartAddress == 0x57)							//平均次数
-//	{
-//		if(  (dat < 0x01) || (dat >0x07)  ){ModbusReturnAckInfo(3);	return ERROR;}   //如果不等于特定值，返回错误
-//		KeepRegister.bps = dat;
-//		EEWrite(KREEPROM_BASEADDR+174,(void *)&dat,2);//保存数据
-//	}
-	
 	if(  err != 0 )			//返回异常码信息
 	{
 		ModbusReturnAckInfo(err);					//向485返回异常码信息
@@ -389,6 +348,7 @@ char ModbusWriteSingleRegistor(unsigned char RX_Len)
 *********************************/
 char ModbusWriteSomeRegistor(unsigned char RX_Len)
 {
+	OS_ERR err2;
 	uint8_t err=0;
 	uint8_t temp[10];
 	//uint8_t t[180];
@@ -401,17 +361,13 @@ char ModbusWriteSomeRegistor(unsigned char RX_Len)
 	uint16_t StopAddress = StartAddress + RegVal - 1;									//获取结束地址
 	uint16_t KeepRegistorSize = sizeof(KeepRegister) / 2;								//计算保持寄存器总数量
 	uint8_t rx_data_len=ModbusDataPackage.dat[6];
-	
-	//U485TX;Delay_ms(10);
-	
-	//printf("修正值:mm  修正后高度值:mm\r\n");
-	//Delay_ms(100);U485RX;Delay_ms(10);
+	uint8_t *px=(uint8_t *)&KeepRegisterTemp;
 	
 	
+	//log_info("RegVal:%d,bytes:%d,StartAddress:%d,RX_Len:%d,rx_data_len:%d\r\n",RegVal,bytes,StartAddress,RX_Len,rx_data_len+9);
 	
 	if(RX_Len != (rx_data_len+9) )err = err_OE;
-	
-	
+	if(bytes != RegVal*2 )err = err_OE;
 	
 	//参数合法检查
 	if(!RegVal || !bytes)err = err_add;													//寄存器地址不正确,读取数量必须大于1
@@ -508,18 +464,22 @@ char ModbusWriteSomeRegistor(unsigned char RX_Len)
 	if(!err)																						//如果无错误,则将缓存的数据拷贝到寄存器中
 	{
 		memcpy((uint8_t *)&KeepRegister,(uint8_t *)&KeepRegisterTemp,sizeof(KeepRegister));
-		//EEWrite(KREEPROM_BASEADDR,(void *)&KeepRegisterTemp,sizeof(KeepRegister));					//保存数据，更新整个寄存器组
-		EEWrite(KREEPROM_BASEADDR,(void *)&KeepRegister.DeviceAddress,24);//更新EEPROM
-		GPIO_PinReverse(GPIOA,GPIO_Pin_1);
 		
-		EEWrite(KREEPROM_BASEADDR+24,(void *)&KeepRegister.MV[0],28);
-		GPIO_PinReverse(GPIOA,GPIO_Pin_1);
+		EEWrite(KREEPROM_BASEADDR+StartAddress*2,(void *)(px+StartAddress*2),bytes);					//保存更新的数据
 		
-		EEWrite(KREEPROM_BASEADDR+52,(void *)&KeepRegister.LTC0[0],120);
-		GPIO_PinReverse(GPIOA,GPIO_Pin_1);
 		
-		EEWrite(KREEPROM_BASEADDR+172,(void *)&KeepRegister.Average_num,4);//保存数据
-		GPIO_PinReverse(GPIOA,GPIO_Pin_1);
+		
+//		EEWrite(KREEPROM_BASEADDR,(void *)&KeepRegister.DeviceAddress,24);//更新EEPROM
+//		GPIO_PinReverse(GPIOA,GPIO_Pin_1);
+//		
+//		EEWrite(KREEPROM_BASEADDR+24,(void *)&KeepRegister.MV[0],28);
+//		GPIO_PinReverse(GPIOA,GPIO_Pin_1);
+//		
+//		EEWrite(KREEPROM_BASEADDR+52,(void *)&KeepRegister.LTC0[0],120);
+//		GPIO_PinReverse(GPIOA,GPIO_Pin_1);
+//		
+//		EEWrite(KREEPROM_BASEADDR+172,(void *)&KeepRegister.Average_num,4);//保存数据
+//		GPIO_PinReverse(GPIOA,GPIO_Pin_1);
 
 	}
 	else if(ModbusDataPackage.dat[0])//如果数据范围错误
@@ -536,7 +496,12 @@ char ModbusWriteSomeRegistor(unsigned char RX_Len)
 	crc = CRC16_Check(temp,6);								//crc校验
 	temp[6] = crc & 0xff;									//crc低位在前
 	temp[7] = crc >> 8;										//高位在后
+	
+	//OSTimeDlyHMSM(0,0,0,100,OS_OPT_TIME_HMSM_STRICT,&err2); //延时1ms
+	
 	if(ModbusDataPackage.dat[0]) U485SendData(temp,8);		//发送数据
+	
+	
 	
 	return SUCCESS;
 }
@@ -1062,6 +1027,9 @@ void Instruction_Process_Subfunction(unsigned short RX_Len)
 						break;
 		} 
 	}
+//	USART1_ClearBuf_Flag();				 //清空串口接收缓存
+//	ModbusDataPackage.DataLen = 0;  //先清空长度，注意清空顺序
+//	ModbusDataPackage.DataFlag = 0; //清空标记位
 }
 
 

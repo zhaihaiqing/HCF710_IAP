@@ -21,6 +21,8 @@
 							//设置输出速度为40MHz
 							//设置上拉
 
+//extern volatile unsigned char IS_UART_RX_IN_DS18B20;
+
 
 float ADT7301_ReadTemp(void);
 

@@ -9,6 +9,7 @@
   */
 
 #include "main.h"
+#include "includes.h"
 //#include "os_cpu.h"
 
 static  CPU_BOOLEAN     AppSw;
@@ -118,10 +119,11 @@ void Init_Parameter(void)
 	//初始化保持寄存器参数
 	//EEErase(FPOWERONFLAG_BASEADDR,2);
 	EERead(FPOWERONFLAG_BASEADDR,temp,2);//执行首次开机标志位判断，确认是否是首次开机
+	GPIO_PinReverse(GPIOA,GPIO_Pin_1);
 	if( (temp[0] != 0x12) && (temp[1] != 0x34) )
 	{
 		//是首次开机
-		//log1_info("Device powers on for the first time,and Init Default Parameter. . .\r\n");
+		//log_info("Device powers on for the first time,and Init Default Parameter. . .\r\n");
 		//EERead(KREEPROM_BASEADDR,(void *)&KeepRegister.DeviceAddress,20);//读取EEPROM中存储的保持寄存器值，恢复以下几项
 		
 		GPIO_PinReverse(GPIOA,GPIO_Pin_1);
@@ -194,7 +196,7 @@ void Init_Parameter(void)
 		SuperMode_Flag=0;
 		InputRegister.SystemWorkStatus=(InputRegister.SystemWorkStatus & 0x00ff)|0x0200;
 	}
-	
+	GPIO_PinReverse(GPIOA,GPIO_Pin_1);
 	//log1_info("time1:%ds\r\n",KeepRegister.Average_num);
 	
 	EERead(KREEPROM_BASEADDR,(void *)&KeepRegister,sizeof(KeepRegister));
@@ -209,7 +211,7 @@ void Init_Parameter(void)
 	
 	GPIO_PinReverse(GPIOA,GPIO_Pin_1);
 	Get_SNInfo_Fun();
-	
+	GPIO_PinReverse(GPIOA,GPIO_Pin_1);
 	//log1_info("Device Parameter has Init!,time:%ds\r\n",KeepRegister.Average_num);
 }
 
@@ -294,17 +296,18 @@ static  void  AppTaskStart (void *p_arg)
 		/**			外设初始化			**/
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_3);//中断优先级分组
 	GPIO_Configuration();
-	
+
 	Init_Parameter();
 	
 	UART1_Configuration(KeepRegister.bps);
+#ifdef  debug
+	UART3_Configuration(256000);
+#endif
 	SPI1_Configuration();
 	
 	AD779x_Init();
 	
-	
-	
-	//log1_info("3 cpu_clk_freq:%dHz\r\n",cpu_clk_freq);
+	log_info("3 cpu_clk_freq:%dHz\r\n",cpu_clk_freq);
 	//log1_info("NVIC_PriorityGroup_3\r\n");
 	//log1_info("GPIO has Init!\r\n");
 	//log1_info("UART has Init:%dbps!\r\n",COM_UART_bps);
@@ -392,7 +395,7 @@ static  void  AppTaskStart (void *p_arg)
 			 (void   	* )0,					
 			 (OS_OPT      )OS_OPT_TASK_STK_CHK|OS_OPT_TASK_STK_CLR,
 			 (OS_ERR 	* )&err);	
-#ifdef debug	
+#ifdef debug2	
 	OSTaskCreate((OS_TCB 	* )&LOGINFOTaskTCB,		//参数打印任务
 			 (CPU_CHAR	* )"LOGINFO Task", 		
 			 (OS_TASK_PTR )LOGINFO_Task, 			
@@ -436,12 +439,12 @@ static  void  AppTaskStart (void *p_arg)
 			 (OS_OPT      )OS_OPT_TASK_STK_CHK|OS_OPT_TASK_STK_CLR,
 			 (OS_ERR 	* )&err);
 	
-	//log1_info("LED0_Task has Create，prio:%d!\r\n",LED0_TASK_PRIO);
-	//log1_info("LED1_Task has Create，prio:%d!\r\n",LED1_TASK_PRIO);
-	//log1_info("LOGINFO_Task has Create，prio:%d!\r\n",LOGINFO_TASK_PRIO);
-	//log1_info("TEMP_Task has Create，prio:%d!\r\n",TEMP_TASK_PRIO);
-	//log1_info("MAINPOWER_Task has Create，prio:%d!\r\n",MAINPOWER_TASK_PRIO);
-	//log1_info("OS has Init!\r\n");
+//	log_info("LED0_Task has Create，prio:%d!\r\n",LED0_TASK_PRIO);
+//	log_info("LED1_Task has Create，prio:%d!\r\n",LED1_TASK_PRIO);
+//	log_info("LOGINFO_Task has Create，prio:%d!\r\n",LOGINFO_TASK_PRIO);
+//	log_info("TEMP_Task has Create，prio:%d!\r\n",TEMP_TASK_PRIO);
+//	log_info("MAINPOWER_Task has Create，prio:%d!\r\n",MAINPOWER_TASK_PRIO);
+	log_info("OS has Init!\r\n");
 		 
 	//OS_TaskSuspend((OS_TCB*)&AppTaskStartTCB,&err);		//挂起开始任务	
 	OS_CRITICAL_EXIT();	//临界区
@@ -453,32 +456,37 @@ static  void  AppTaskStart (void *p_arg)
 	
 }
 
-
-
 void Instruction_Task(void *p_arg)
 {
 	OS_ERR err;
 	unsigned char ix,RX_Len;
 	unsigned short crc;
+	CPU_SR_ALLOC();
 	p_arg = p_arg;
+	
 	RS485_RX();
 	while(1)
-	{
-//		if(ModbusIntervalTime) ModbusIntervalTime--;
-//		else
-//		{
-//			if(ModbusDataPackage.DataLen && !ModbusDataPackage.DataFlag)
-//			ModbusDataPackage.DataFlag = 1;
-//			Modbus_FreeFlag=0;
-//		}
+	{		
 		if(ModbusDataPackage.DataFlag)		  //数据包已接收完成
 		{ 	
-			for(ix=0;ix<ModbusDataPackage.DataLen;ix++) ModbusDataPackage.dat[ix] =USART1_GetChar();//将串口数据放到指定buf
+			log_info("DataFlag:%d\r\n",ModbusDataPackage.DataFlag);
+			OS_CRITICAL_ENTER();
+			USART_ITConfig(USART1, USART_IT_RXNE, DISABLE);
+			USART_ITConfig(USART1, USART_IT_IDLE, DISABLE);
+			
+			for(ix=0;ix<ModbusDataPackage.DataLen;ix++) 
+			{
+				ModbusDataPackage.dat[ix] =USART1_GetChar();//将串口数据放到指定buf
+			}
 			RX_Len=ModbusDataPackage.DataLen;
 			
 			USART1_ClearBuf_Flag();				 //清空串口接收缓存
 			ModbusDataPackage.DataLen = 0;  //先清空长度，注意清空顺序
 			ModbusDataPackage.DataFlag = 0; //清空标记位
+			
+			OS_CRITICAL_EXIT();
+			
+			log_info("RX_Len:%d\r\n",RX_Len);
 			
 			crc = CRC16_Check((uint8_t *)ModbusDataPackage.dat,RX_Len-2 );
 			
@@ -487,8 +495,16 @@ void Instruction_Task(void *p_arg)
 			{
 				 Instruction_Process_Subfunction(RX_Len);
 			}
+			USART1_ClearBuf_Flag();				 //清空串口接收缓存
+			ModbusDataPackage.DataLen = 0;  //先清空长度，注意清空顺序
+			ModbusDataPackage.DataFlag = 0; //清空标记位
+			USART_ClearFlag(USART1, USART_FLAG_TC);
+			crc=USART1->SR;
+			crc=USART1->DR;
+			USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
+			USART_ITConfig(USART1, USART_IT_IDLE, ENABLE);
 		}
-		OSTimeDlyHMSM(0,0,0,1,OS_OPT_TIME_HMSM_STRICT,&err); //延时1ms
+		OSTimeDlyHMSM(0,0,0,2,OS_OPT_TIME_HMSM_STRICT,&err); //延时1ms
 	}
 }
 
@@ -543,7 +559,7 @@ void TEMP_Task(void *p_arg)
 				Temp_Count++;
 				InputRegister.Temperature=DS18B20_Temp;
 				Old_Temp=DS18B20_Temp;
-				//log1_info("DS18B20_temp2:%.3f℃\r\n",DS18B20_Temp);
+				log_info("DS18B20_temp2:%.3f℃\r\n",DS18B20_Temp);
 			}
 			else
 			{
@@ -591,7 +607,7 @@ void MAINPOWER_Task(void *p_arg)
 		RCC_HSICmd(DISABLE);  // Enable The HSI (16Mhz)
 		RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, DISABLE);	//Enable ADC1 clock
 		
-		//log1_info("MainPower:%.3fV\r\n",InputRegister.MainPower_V);
+		log_info("MainPower:%.3fV\r\n",InputRegister.MainPower_V);
 		
 		OSTimeDlyHMSM(0,0,2,0,OS_OPT_TIME_HMSM_STRICT,&err); //延时2000ms
 		
@@ -616,7 +632,7 @@ void PAS_Task(void *p_arg)
 	OSTimeDlyHMSM(0,0,2,0,OS_OPT_TIME_HMSM_STRICT,&err); //延时2000ms
 	OSTmrStart(&tmr1,&err);			//开启软件定时器tmr1
 	
-	log1_info("0 AD779x ID:0x%x,Status:0x%x\r\n",ad7799_ID,ad7799_status);
+	log_info("0 AD779x ID:0x%x,Status:0x%x\r\n",ad7799_ID,ad7799_status);
 	while(1)
 	{
 		AD779x_ContinuousReadData1(KeepRegister.Average_num);//
@@ -628,7 +644,7 @@ void PAS_Task(void *p_arg)
 			Level_height_conversion(InputRegister.ADCOriginalValue,InputRegister.Temperature);
 			test_count++;
 			
-			log1_info("%d Average_num:%d,adc_mV=%fmV,temp=%f\r\n",test_count,KeepRegister.Average_num,InputRegister.ADCOriginalValue,InputRegister.Temperature);
+			log_info("%d Average_num:%d,adc_mV=%fmV,temp=%f\r\n",test_count,KeepRegister.Average_num,InputRegister.ADCOriginalValue,InputRegister.Temperature);
 	
 			//log_info("Befor_AbsoluteValue:%fmm,Befor_DiffAltitude:%fmm\r\n",InputRegister.LiquidAltitudeAbsoluteValue_Befor,InputRegister.AltitudeDifference_Befor);
 			//log_info("After_AbsoluteValue:%fmm,After_DiffAltitude:%fmm\r\n",InputRegister.LiquidAltitudeAbsoluteValue_After,InputRegister.AltitudeDifference_After);
@@ -718,8 +734,6 @@ void LOGINFO_Task(void *p_arg)
 	log_info("InputRegister.MainPower_V:%f\r\n",InputRegister.MainPower_V);
 	
 	OS_TaskSuspend((OS_TCB*)&LOGINFOTaskTCB,&err);		//挂起该任务
-	
-	//return ;
 }
 #endif
 

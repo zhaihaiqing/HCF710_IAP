@@ -2,7 +2,7 @@
 #include "main.h"
 #include "includes.h"
 
-
+//volatile unsigned char IS_UART_RX_IN_DS18B20=0;
 
 /*******************************************************************************
 * Function Name  : ADT7301_ReadTemp
@@ -181,16 +181,26 @@ float DS18B20_TEMP(void)
 	float tt,result;
 	unsigned short temp;
 	unsigned char a,b;
+	OS_ERR err;
 	
 	CPU_SR_ALLOC();
 	
 //	if(DS18B20_Rst());
 //	DS18B20_ReadROM();
 	
-	OS_CRITICAL_ENTER();
+	//OS_CRITICAL_ENTER();
+	
+	OSSchedLock(&err);//关闭任务调度
+	
+//retry_temp:
+//	
+//	OSTimeDlyHMSM(0,0,0,10,OS_OPT_TIME_HMSM_STRICT,&err); //延时
+//	IS_UART_RX_IN_DS18B20=0;
 	
 	if(DS18B20_Rst())
 	{
+		//OS_CRITICAL_EXIT();
+		OSSchedUnlock(&err);
 		return -85;
 	}
 	
@@ -200,6 +210,8 @@ float DS18B20_TEMP(void)
 	
 	if(DS18B20_Rst())
 	{
+		//OS_CRITICAL_EXIT();
+		OSSchedUnlock(&err);
 		return -85;
 	}
 	DS18B20_Write_Byte(0xcc);
@@ -207,7 +219,18 @@ float DS18B20_TEMP(void)
 	a=DS18B20_Read_Byte();
 	b=DS18B20_Read_Byte();
 	
-	OS_CRITICAL_EXIT();
+	
+//	if(IS_UART_RX_IN_DS18B20!=0)
+//	{
+//		log_info("retry_temp\r\n");
+//		goto retry_temp;
+//		//OS_CRITICAL_EXIT();
+//		//return -85;
+//	}
+	
+	OSSchedUnlock(&err);//恢复调度
+	
+	//OS_CRITICAL_EXIT();
 	
 	
 	
