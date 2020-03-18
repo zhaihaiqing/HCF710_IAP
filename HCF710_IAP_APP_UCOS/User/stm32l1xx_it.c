@@ -190,7 +190,7 @@ void	BSP_IntHandlerUSART1(void)
     CPU_CRITICAL_ENTER();                            /* Tell the OS that we are starting an ISR            */
     OSIntEnter();
     CPU_CRITICAL_EXIT();
-	
+	IS_UART_RX_IN_DS18B20=1;
 	LED1_ON();
 	//if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)
 	if((USART1->SR & 0x20) != RESET)

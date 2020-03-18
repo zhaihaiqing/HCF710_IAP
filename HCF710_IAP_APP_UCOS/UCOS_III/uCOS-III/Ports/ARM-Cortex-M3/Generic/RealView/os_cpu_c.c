@@ -47,6 +47,7 @@ const  CPU_CHAR  *os_cpu_c__c = "$Id: $";
 
 #include  <os.h>
 //#include "includes.h"
+#include "Temp.h"
 
 /*
 *********************************************************************************************************
@@ -369,7 +370,8 @@ void  OS_CPU_SysTickHandler (void)
     CPU_CRITICAL_ENTER();
     OSIntNestingCtr++;                                      /* Tell uC/OS-III that we are starting an ISR             */
     CPU_CRITICAL_EXIT();
-
+	
+	IS_UART_RX_IN_DS18B20=1;
     OSTimeTick();                                           /* Call uC/OS-III's OSTimeTick()                          */
 
     OSIntExit();                                            /* Tell uC/OS-III that we are leaving the ISR             */

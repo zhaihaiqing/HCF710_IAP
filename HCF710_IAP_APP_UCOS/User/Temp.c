@@ -2,7 +2,7 @@
 #include "main.h"
 #include "includes.h"
 
-//volatile unsigned char IS_UART_RX_IN_DS18B20=0;
+volatile unsigned char IS_UART_RX_IN_DS18B20=0;
 
 /*******************************************************************************
 * Function Name  : ADT7301_ReadTemp
@@ -49,8 +49,16 @@ unsigned char DS18B20_Rom_Addr[8];
 void DS18B20_delayus(unsigned int us)
 {	
 	unsigned int  i=0;
+//	OS_ERR err;
+//	CPU_SR_ALLOC();
+	
+	//OS_CRITICAL_ENTER();
+	
+	
 	for(i=0;i<us;i++)
 	{__nop();}
+	
+	//OS_CRITICAL_EXIT();
 }
 //cpu_clk=7.3728MHz
 #define ds18b20_t_538us	480
@@ -83,6 +91,7 @@ void DS18B20_delayus(unsigned int us)
 unsigned char DS18B20_Rst(void)			//复位DS18B20
 {
 	unsigned char dat;
+	
 	SET_DS18B20_DQ_OUT;
 	DQ_OUT_L;//拉低
 	DS18B20_delayus(480);//538us
@@ -92,9 +101,10 @@ unsigned char DS18B20_Rst(void)			//复位DS18B20
 	
 	dat=DQ_Read();
 	
-	DS18B20_delayus(480);//524us
+	DS18B20_delayus(240);//524us
 	SET_DS18B20_DQ_OUT;
 	DQ_OUT_H;
+	
 	return dat;	
 }
 
@@ -104,6 +114,7 @@ unsigned char DS18B20_Read_Byte(void)
 	
 	for(i=0;i<8;i++)
 	{
+		
 		dat>>=1;
 		SET_DS18B20_DQ_OUT;//设置为输出
 		
@@ -142,6 +153,7 @@ void DS18B20_Write_Byte(unsigned char dat)
 			DS18B20_delayus(2);//
 		}
 		dat>>=1;
+		
 	}
 }
 
@@ -176,6 +188,8 @@ void DS18B20_SendConV_Command(void)
 	DS18B20_Write_Byte(0x44);
 }
 
+
+
 float DS18B20_TEMP(void)
 {
 	float tt,result;
@@ -188,26 +202,15 @@ float DS18B20_TEMP(void)
 //	if(DS18B20_Rst());
 //	DS18B20_ReadROM();
 	
+	
+	
+retry_temp:
+	
+	IS_UART_RX_IN_DS18B20=0;
+	
 	//OS_CRITICAL_ENTER();
-	
 	OSSchedLock(&err);//关闭任务调度
-	
-//retry_temp:
-//	
-//	OSTimeDlyHMSM(0,0,0,10,OS_OPT_TIME_HMSM_STRICT,&err); //延时
-//	IS_UART_RX_IN_DS18B20=0;
-	
-	if(DS18B20_Rst())
-	{
-		//OS_CRITICAL_EXIT();
-		OSSchedUnlock(&err);
-		return -85;
-	}
-	
-	
-	DS18B20_Write_Byte(0xcc);
-	DS18B20_Write_Byte(0x44);
-	
+
 	if(DS18B20_Rst())
 	{
 		//OS_CRITICAL_EXIT();
@@ -220,21 +223,27 @@ float DS18B20_TEMP(void)
 	b=DS18B20_Read_Byte();
 	
 	
-//	if(IS_UART_RX_IN_DS18B20!=0)
-//	{
-//		log_info("retry_temp\r\n");
-//		goto retry_temp;
-//		//OS_CRITICAL_EXIT();
-//		//return -85;
-//	}
+	if(DS18B20_Rst())
+	{
+		//OS_CRITICAL_EXIT();
+		OSSchedUnlock(&err);
+		return -85;
+	}
+	DS18B20_Write_Byte(0xcc);
+	DS18B20_Write_Byte(0x44);
 	
+
 	OSSchedUnlock(&err);//恢复调度
 	
+	
+	if(IS_UART_RX_IN_DS18B20!=0)
+	{
+		log_info("retry_temp\r\n");
+		OSTimeDlyHMSM(0,0,0,900,OS_OPT_TIME_HMSM_STRICT,&err); //延时
+		goto retry_temp;
+	}
 	//OS_CRITICAL_EXIT();
-	
-	
-	
-	
+
 	temp=(b<<8) | a ;
 	//log1_info("DS18B20_1:0x%x   ",temp);
 	
@@ -255,6 +264,14 @@ float DS18B20_TEMP(void)
 		result = tt;
 		//log_info("DS18B20_2:%.2f\r\n",result);
 	}
+	
+	if((result<-40) || (result>85))
+	{
+		log_info("retry_temp\r\n");
+		OSTimeDlyHMSM(0,0,0,900,OS_OPT_TIME_HMSM_STRICT,&err); //延时
+		goto retry_temp;
+	}
+	
 
 	//log1_info("DS18B20:%.2f\r\n",result);
 	return result;

@@ -13,3 +13,4 @@
 .\output\os_cpu_c.o: .\UCOS_III\uC-LIB\lib_ascii.h
 .\output\os_cpu_c.o: .\UCOS_III\uCOS-III\Source\os_type.h
 .\output\os_cpu_c.o: .\UCOS_III\uCOS-III\Ports\ARM-Cortex-M3\Generic\RealView\os_cpu.h
+.\output\os_cpu_c.o: .\User\Temp.h

@@ -469,7 +469,7 @@ void Instruction_Task(void *p_arg)
 	{		
 		if(ModbusDataPackage.DataFlag)		  //数据包已接收完成
 		{ 	
-			log_info("DataFlag:%d\r\n",ModbusDataPackage.DataFlag);
+			//log_info("DataFlag:%d\r\n",ModbusDataPackage.DataFlag);
 			OS_CRITICAL_ENTER();
 			USART_ITConfig(USART1, USART_IT_RXNE, DISABLE);
 			USART_ITConfig(USART1, USART_IT_IDLE, DISABLE);
@@ -486,7 +486,7 @@ void Instruction_Task(void *p_arg)
 			
 			OS_CRITICAL_EXIT();
 			
-			log_info("RX_Len:%d\r\n",RX_Len);
+			//log_info("RX_Len:%d\r\n",RX_Len);
 			
 			crc = CRC16_Check((uint8_t *)ModbusDataPackage.dat,RX_Len-2 );
 			
@@ -504,7 +504,7 @@ void Instruction_Task(void *p_arg)
 			USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
 			USART_ITConfig(USART1, USART_IT_IDLE, ENABLE);
 		}
-		OSTimeDlyHMSM(0,0,0,2,OS_OPT_TIME_HMSM_STRICT,&err); //延时1ms
+		OSTimeDlyHMSM(0,0,0,10,OS_OPT_TIME_HMSM_STRICT,&err); //延时1ms
 	}
 }
 
@@ -522,6 +522,8 @@ void TEMP_Task(void *p_arg)
 {
 	OS_ERR err;
 	unsigned char i=0;
+	unsigned char temp_err=0;
+	
 	float temp[5]={0},buff=0;
 	float ADT7301_Temp,DS18B20_Temp,ABStemp;
 	//OS_CPU_SR cpu_sr=0;
@@ -549,34 +551,38 @@ void TEMP_Task(void *p_arg)
 		//OSSchedLock(&err);//关闭任务调度
 		DS18B20_Temp=DS18B20_TEMP();
 		//OSSchedUnlock(&err);//恢复调度  
-		//log1_info("DS18B20_temp:%.3f℃\r\n",DS18B20_Temp);
 		
 		ABStemp = (DS18B20_Temp>Old_Temp)?(DS18B20_Temp-Old_Temp):(Old_Temp-DS18B20_Temp);
-		if( (DS18B20_Temp>=-40) && (DS18B20_Temp<=85) )
+		
+		log_info("DS18B20_temp:%.3f℃\r\n",DS18B20_Temp);
+
+		if(ABStemp>3)
 		{
-			if( (ABStemp<3) || (Temp_Count<3) )
+			Temp_Err_Count++;
+			temp_err=0x01;
+			if(Temp_Err_Count>5)
 			{
-				Temp_Count++;
-				InputRegister.Temperature=DS18B20_Temp;
-				Old_Temp=DS18B20_Temp;
-				log_info("DS18B20_temp2:%.3f℃\r\n",DS18B20_Temp);
+				Temp_Err_Count=0;
+				temp_err=0;
 			}
-			else
-			{
-				Temp_Err_Count++;
-				if(Temp_Err_Count>5)
-				{
-					Temp_Err_Count=0;
-					Temp_Count=0;
-				}
-				
-			}
-			OSTimeDlyHMSM(0,0,2,0,OS_OPT_TIME_HMSM_STRICT,&err); //延时1000ms，每各1S进行依次温度采样
 		}
 		else
 		{
-			OSTimeDlyHMSM(0,0,2,0,OS_OPT_TIME_HMSM_STRICT,&err); //延时300ms	
+			Temp_Err_Count=0;
+			temp_err=0;
 		}
+		
+		if(temp_err==0)
+		{
+			Temp_Err_Count=0;
+			InputRegister.Temperature=DS18B20_Temp;
+			Old_Temp=DS18B20_Temp;
+			log_info("            						temp2:%.3f℃\r\n",DS18B20_Temp);
+		}
+		
+		log_info("Temp_Err_Count:%d,temp_err:%d\r\n",Temp_Err_Count,temp_err);
+		
+		OSTimeDlyHMSM(0,0,3,0,OS_OPT_TIME_HMSM_STRICT,&err); //延时2000ms，每各2S进行依次温度采样
 	}	
 	
 }
@@ -607,7 +613,7 @@ void MAINPOWER_Task(void *p_arg)
 		RCC_HSICmd(DISABLE);  // Enable The HSI (16Mhz)
 		RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, DISABLE);	//Enable ADC1 clock
 		
-		log_info("MainPower:%.3fV\r\n",InputRegister.MainPower_V);
+		//log_info("MainPower:%.3fV\r\n",InputRegister.MainPower_V);
 		
 		OSTimeDlyHMSM(0,0,2,0,OS_OPT_TIME_HMSM_STRICT,&err); //延时2000ms
 		
@@ -644,12 +650,12 @@ void PAS_Task(void *p_arg)
 			Level_height_conversion(InputRegister.ADCOriginalValue,InputRegister.Temperature);
 			test_count++;
 			
-			log_info("%d Average_num:%d,adc_mV=%fmV,temp=%f\r\n",test_count,KeepRegister.Average_num,InputRegister.ADCOriginalValue,InputRegister.Temperature);
+			//log_info("%d Average_num:%d,adc_mV=%fmV,temp=%f\r\n",test_count,KeepRegister.Average_num,InputRegister.ADCOriginalValue,InputRegister.Temperature);
 	
 			//log_info("Befor_AbsoluteValue:%fmm,Befor_DiffAltitude:%fmm\r\n",InputRegister.LiquidAltitudeAbsoluteValue_Befor,InputRegister.AltitudeDifference_Befor);
 			//log_info("After_AbsoluteValue:%fmm,After_DiffAltitude:%fmm\r\n",InputRegister.LiquidAltitudeAbsoluteValue_After,InputRegister.AltitudeDifference_After);
 		}
-		OSTimeDlyHMSM(0,0,0,10,OS_OPT_TIME_HMSM_STRICT,&err); //延时
+		OSTimeDlyHMSM(0,0,0,20,OS_OPT_TIME_HMSM_STRICT,&err); //延时
 	}
 
 }
@@ -676,7 +682,7 @@ void LED0_Task(void *p_arg)
 		LED0_ON();
 		OSTimeDlyHMSM(0,0,0,40,OS_OPT_TIME_HMSM_STRICT,&err); //延时40ms
 		LED0_OFF();
-		OSTimeDlyHMSM(0,0,1,388,OS_OPT_TIME_HMSM_STRICT,&err); //延时1388ms，每分钟42次
+		OSTimeDlyHMSM(0,0,1,380,OS_OPT_TIME_HMSM_STRICT,&err); //延时1388ms，每分钟42次
 	}
 }
 

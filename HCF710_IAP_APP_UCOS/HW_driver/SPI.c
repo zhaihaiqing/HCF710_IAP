@@ -272,7 +272,7 @@ unsigned int AD779x_Calibrate(void)
 	AD779x_SetMode(AD779x_INTERNAL_OFFSET_CAL_MODE, 0, AD779x_16_7_1_HZ);
 	while(!AD779x_DataReady())
 	{
-		 OSTimeDlyHMSM(0,0,0,2,OS_OPT_TIME_HMSM_STRICT,&err); //—” ±
+		 OSTimeDlyHMSM(0,0,0,10,OS_OPT_TIME_HMSM_STRICT,&err); //—” ±
 		 if(!(--timeout))return 0;
 	}
 	offset = AD779x_ReadOffset();
