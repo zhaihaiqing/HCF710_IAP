@@ -1,6 +1,6 @@
 Dependencies for Project 'Project', Target 'STM32L1xx': (DO NOT MODIFY !)
 F (.\User\main.c)(0x5E670342)(-c --cpu Cortex-M3 -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I .\User -I .\FWlib\src -I .\FWlib\inc -I .\CMSIS -I .\BSD-I.\RTE\_STM32L1xx-I"D:\Program Files\Keil_v5\ARM\PACK\Keil\STM32L1xx_DFP\1.2.0\Device\Include"-I"D:\Program Files\Keil_v5\ARM\CMSIS\Include"-D__UVISION_VERSION="525" -DSTM32L151xB -DUSE_STDPERIPH_DRIVER -DSTM32L1XX-o .\output\main.o --omf_browse .\output\main.crf --depend .\output\main.d)
-I (User\main.h)(0x5E670375)
+I (User\main.h)(0x5E72DE3B)
 I (D:\Program Files\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599ECD2C)
 I (User\stm32l1xx.h)(0x5D00A7A5)
 I (.\CMSIS\core_cm3.h)(0x5534FBDB)
@@ -77,7 +77,7 @@ I (.\FWlib\inc\stm32l1xx_tim.h)(0x55353DCC)
 I (.\FWlib\inc\stm32l1xx_usart.h)(0x55353DCC)
 I (.\FWlib\inc\stm32l1xx_wwdg.h)(0x55353DCC)
 I (.\FWlib\inc\misc.h)(0x55353DCC)
-I (User\main.h)(0x5E670375)
+I (User\main.h)(0x5E72DE3B)
 I (D:\Program Files\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599ECD2C)
 I (.\BSD\uart.h)(0x5E66FAD4)
 I (.\BSD\gpio.h)(0x5B0BC3D5)
@@ -87,7 +87,7 @@ I (.\BSD\IFLASH.h)(0x5CFEFC43)
 I (User\IAP.h)(0x5CFF717B)
 I (User\IAP_CONFIG.h)(0x5D7753C1)
 F (.\User\IAP.c)(0x5E6702D8)(-c --cpu Cortex-M3 -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I .\User -I .\FWlib\src -I .\FWlib\inc -I .\CMSIS -I .\BSD-I.\RTE\_STM32L1xx-I"D:\Program Files\Keil_v5\ARM\PACK\Keil\STM32L1xx_DFP\1.2.0\Device\Include"-I"D:\Program Files\Keil_v5\ARM\CMSIS\Include"-D__UVISION_VERSION="525" -DSTM32L151xB -DUSE_STDPERIPH_DRIVER -DSTM32L1XX-o .\output\iap.o --omf_browse .\output\iap.crf --depend .\output\iap.d)
-I (User\main.h)(0x5E670375)
+I (User\main.h)(0x5E72DE3B)
 I (D:\Program Files\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599ECD2C)
 I (User\stm32l1xx.h)(0x5D00A7A5)
 I (.\CMSIS\core_cm3.h)(0x5534FBDB)
@@ -130,7 +130,7 @@ I (.\BSD\IFLASH.h)(0x5CFEFC43)
 I (User\IAP.h)(0x5CFF717B)
 I (User\IAP_CONFIG.h)(0x5D7753C1)
 F (.\User\Modbus.c)(0x5D8C8D0C)(-c --cpu Cortex-M3 -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I .\User -I .\FWlib\src -I .\FWlib\inc -I .\CMSIS -I .\BSD-I.\RTE\_STM32L1xx-I"D:\Program Files\Keil_v5\ARM\PACK\Keil\STM32L1xx_DFP\1.2.0\Device\Include"-I"D:\Program Files\Keil_v5\ARM\CMSIS\Include"-D__UVISION_VERSION="525" -DSTM32L151xB -DUSE_STDPERIPH_DRIVER -DSTM32L1XX-o .\output\modbus.o --omf_browse .\output\modbus.crf --depend .\output\modbus.d)
-I (User\main.h)(0x5E670375)
+I (User\main.h)(0x5E72DE3B)
 I (D:\Program Files\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599ECD2C)
 I (User\stm32l1xx.h)(0x5D00A7A5)
 I (.\CMSIS\core_cm3.h)(0x5534FBDB)
@@ -173,7 +173,7 @@ I (.\BSD\IFLASH.h)(0x5CFEFC43)
 I (User\IAP.h)(0x5CFF717B)
 I (User\IAP_CONFIG.h)(0x5D7753C1)
 F (.\BSD\gpio.c)(0x5D1198DD)(-c --cpu Cortex-M3 -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I .\User -I .\FWlib\src -I .\FWlib\inc -I .\CMSIS -I .\BSD-I.\RTE\_STM32L1xx-I"D:\Program Files\Keil_v5\ARM\PACK\Keil\STM32L1xx_DFP\1.2.0\Device\Include"-I"D:\Program Files\Keil_v5\ARM\CMSIS\Include"-D__UVISION_VERSION="525" -DSTM32L151xB -DUSE_STDPERIPH_DRIVER -DSTM32L1XX-o .\output\gpio.o --omf_browse .\output\gpio.crf --depend .\output\gpio.d)
-I (.\User\main.h)(0x5E670375)
+I (.\User\main.h)(0x5E72DE3B)
 I (D:\Program Files\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599ECD2C)
 I (.\User\stm32l1xx.h)(0x5D00A7A5)
 I (.\CMSIS\core_cm3.h)(0x5534FBDB)
@@ -215,7 +215,7 @@ I (.\BSD\IFLASH.h)(0x5CFEFC43)
 I (.\User\IAP.h)(0x5CFF717B)
 I (.\User\IAP_CONFIG.h)(0x5D7753C1)
 F (.\BSD\IEEPROM.c)(0x5CFCC111)(-c --cpu Cortex-M3 -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I .\User -I .\FWlib\src -I .\FWlib\inc -I .\CMSIS -I .\BSD-I.\RTE\_STM32L1xx-I"D:\Program Files\Keil_v5\ARM\PACK\Keil\STM32L1xx_DFP\1.2.0\Device\Include"-I"D:\Program Files\Keil_v5\ARM\CMSIS\Include"-D__UVISION_VERSION="525" -DSTM32L151xB -DUSE_STDPERIPH_DRIVER -DSTM32L1XX-o .\output\ieeprom.o --omf_browse .\output\ieeprom.crf --depend .\output\ieeprom.d)
-I (.\User\main.h)(0x5E670375)
+I (.\User\main.h)(0x5E72DE3B)
 I (D:\Program Files\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599ECD2C)
 I (.\User\stm32l1xx.h)(0x5D00A7A5)
 I (.\CMSIS\core_cm3.h)(0x5534FBDB)
@@ -257,7 +257,7 @@ I (.\BSD\IFLASH.h)(0x5CFEFC43)
 I (.\User\IAP.h)(0x5CFF717B)
 I (.\User\IAP_CONFIG.h)(0x5D7753C1)
 F (.\BSD\IFLASH.c)(0x5E66F60F)(-c --cpu Cortex-M3 -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I .\User -I .\FWlib\src -I .\FWlib\inc -I .\CMSIS -I .\BSD-I.\RTE\_STM32L1xx-I"D:\Program Files\Keil_v5\ARM\PACK\Keil\STM32L1xx_DFP\1.2.0\Device\Include"-I"D:\Program Files\Keil_v5\ARM\CMSIS\Include"-D__UVISION_VERSION="525" -DSTM32L151xB -DUSE_STDPERIPH_DRIVER -DSTM32L1XX-o .\output\iflash.o --omf_browse .\output\iflash.crf --depend .\output\iflash.d)
-I (.\User\main.h)(0x5E670375)
+I (.\User\main.h)(0x5E72DE3B)
 I (D:\Program Files\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599ECD2C)
 I (.\User\stm32l1xx.h)(0x5D00A7A5)
 I (.\CMSIS\core_cm3.h)(0x5534FBDB)
@@ -299,7 +299,7 @@ I (.\BSD\IFLASH.h)(0x5CFEFC43)
 I (.\User\IAP.h)(0x5CFF717B)
 I (.\User\IAP_CONFIG.h)(0x5D7753C1)
 F (.\BSD\uart.c)(0x5E670355)(-c --cpu Cortex-M3 -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I .\User -I .\FWlib\src -I .\FWlib\inc -I .\CMSIS -I .\BSD-I.\RTE\_STM32L1xx-I"D:\Program Files\Keil_v5\ARM\PACK\Keil\STM32L1xx_DFP\1.2.0\Device\Include"-I"D:\Program Files\Keil_v5\ARM\CMSIS\Include"-D__UVISION_VERSION="525" -DSTM32L151xB -DUSE_STDPERIPH_DRIVER -DSTM32L1XX-o .\output\uart.o --omf_browse .\output\uart.crf --depend .\output\uart.d)
-I (.\User\main.h)(0x5E670375)
+I (.\User\main.h)(0x5E72DE3B)
 I (D:\Program Files\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599ECD2C)
 I (.\User\stm32l1xx.h)(0x5D00A7A5)
 I (.\CMSIS\core_cm3.h)(0x5534FBDB)

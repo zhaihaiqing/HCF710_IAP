@@ -27,10 +27,15 @@ Project File Date:  03/18/2020
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'D:\Program Files\Keil_v5\ARM\ARMCC\Bin'
 Build target 'STM32L1xx'
+compiling gpio.c...
 compiling Temp.c...
 User\Temp.c(200): warning:  #177-D: variable "cpu_sr"  was declared but never referenced
   	CPU_SR_ALLOC();
 User\Temp.c: 1 warning, 0 errors
+compiling PAS.c...
+User\PAS.c(179): warning:  #177-D: variable "LD_V"  was declared but never referenced
+  	double LD_V[4]={0};
+User\PAS.c: 1 warning, 0 errors
 compiling SPI.c...
 HW_driver\SPI.c(289): warning:  #550-D: variable "buf"  was set but never used
   	unsigned int buf;
@@ -45,27 +50,6 @@ compiling stm32l1xx_it.c...
 User\stm32l1xx_it.c(185): warning:  #550-D: variable "tmp"  was set but never used
   	unsigned char 	Uart_Get_Data,tmp;	//串口1接收的数据
 User\stm32l1xx_it.c: 1 warning, 0 errors
-compiling gpio.c...
-compiling main.c...
-User\main.c(206): warning:  #186-D: pointless comparison of unsigned integer with zero
-  	if((KeepRegister.Average_num<0)||(KeepRegister.Average_num>256))KeepRegister.Average_num=3;
-User\main.c(524): warning:  #177-D: variable "i"  was declared but never referenced
-  	unsigned char i=0;
-User\main.c(527): warning:  #177-D: variable "temp"  was declared but never referenced
-  	float temp[5]={0},buff=0;
-User\main.c(527): warning:  #177-D: variable "buff"  was declared but never referenced
-  	float temp[5]={0},buff=0;
-User\main.c(528): warning:  #177-D: variable "ADT7301_Temp"  was declared but never referenced
-  	float ADT7301_Temp,DS18B20_Temp,ABStemp;
-User\main.c(530): warning:  #177-D: variable "cpu_sr"  was declared but never referenced
-  	CPU_SR_ALLOC();
-User\main.c(15): warning:  #177-D: variable "AppSw"  was declared but never referenced
-  static  CPU_BOOLEAN     AppSw;
-User\main.c: 7 warnings, 0 errors
-compiling PAS.c...
-User\PAS.c(179): warning:  #177-D: variable "LD_V"  was declared but never referenced
-  	double LD_V[4]={0};
-User\PAS.c: 1 warning, 0 errors
 compiling Modbus.c...
 User\Modbus.c(311): warning:  #186-D: pointless comparison of unsigned integer with zero
   			if(  (dat < 0x00) || (dat >256)  ){ModbusReturnAckInfo(3);	return ERROR;}   //如果不等于特定值，返回错误
@@ -112,6 +96,22 @@ User\Modbus.c(931): warning:  #111-D: statement is unreachable
 User\Modbus.c(905): warning:  #177-D: variable "OriginaAltitudeTemp"  was declared but never referenced
   	float OriginaAltitudeTemp=0;
 User\Modbus.c: 22 warnings, 0 errors
+compiling main.c...
+User\main.c(206): warning:  #186-D: pointless comparison of unsigned integer with zero
+  	if((KeepRegister.Average_num<0)||(KeepRegister.Average_num>256))KeepRegister.Average_num=3;
+User\main.c(524): warning:  #177-D: variable "i"  was declared but never referenced
+  	unsigned char i=0;
+User\main.c(527): warning:  #177-D: variable "temp"  was declared but never referenced
+  	float temp[5]={0},buff=0;
+User\main.c(527): warning:  #177-D: variable "buff"  was declared but never referenced
+  	float temp[5]={0},buff=0;
+User\main.c(528): warning:  #177-D: variable "ADT7301_Temp"  was declared but never referenced
+  	float ADT7301_Temp,DS18B20_Temp,ABStemp;
+User\main.c(530): warning:  #177-D: variable "cpu_sr"  was declared but never referenced
+  	CPU_SR_ALLOC();
+User\main.c(15): warning:  #177-D: variable "AppSw"  was declared but never referenced
+  static  CPU_BOOLEAN     AppSw;
+User\main.c: 7 warnings, 0 errors
 compiling uart.c...
 compiling IEEPROM.c...
 compiling Timer.c...
